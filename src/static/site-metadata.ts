@@ -11,19 +11,22 @@ interface ISiteMetadataResult {
 
 const data: ISiteMetadataResult = {
   siteTitle: 'Running Page',
-  siteUrl: 'https://couture.run/',
-  logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTtc69JxHNcmN1ETpMUX4dozAgAN6iPjWalQ&usqp=CAU',
+  siteUrl: 'https://coutures.top',
+  logo: 'https://s3.qjqq.cn/50/673067575aa5c.webp!color',
   description: 'Personal site and blog',
   navLinks: [
     {
-      name: 'Blog',
+      name: 'Home',
       url: 'https://coutures.top',
     },
     {
-      name: 'About',
+      name: 'Page’s Project',
       url: 'https://github.com/yihong0618/running_page/blob/master/README-CN.md',
     },
   ],
 };
 
 export default data;
+
+
+
