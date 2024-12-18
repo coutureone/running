@@ -216,7 +216,7 @@ jobs:
           python run_page/save_to_parqent.py
 
       - name: Push new runs
-        if: env.SAVE_DATA_IN_GITHUB_CACHE != 'true'
+  
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
