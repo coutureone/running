@@ -10,7 +10,7 @@ interface ISiteMetadataResult {
 }
 
 const data: ISiteMetadataResult = {
-  siteTitle: 'Running Page',
+  siteTitle: "Couture's Running Records",
   siteUrl: 'https://coutures.top',
   logo: 'https://s3.qjqq.cn/50/673067575aa5c.webp!color',
   description: 'Personal site and blog',
