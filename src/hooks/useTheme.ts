@@ -16,9 +16,12 @@ interface ThemeProviderProps {
   children: React.ReactNode;
 }
 
-const isNightTime = () => {
-  const hour = new Date().getHours();
-  return hour < 6 || hour >= 18; // 晚上6点到早上6点是暗色模式
+// 检查系统是否处于暗色模式
+const getSystemTheme = (): Theme => {
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    return 'dark';
+  }
+  return 'light';
 };
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
@@ -28,8 +31,8 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     if (savedTheme) {
       return savedTheme as Theme;
     }
-    // 如果没有保存的设置，则根据时间判断
-    return isNightTime() ? 'dark' : 'light';
+    // 如果没有保存的设置，则使用系统设置
+    return getSystemTheme();
   });
 
   useEffect(() => {
@@ -43,20 +46,22 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     }
   }, [theme]);
 
-  // 监听时间变化，自动切换主题
+  // 监听系统主题变化
   useEffect(() => {
-    const checkTime = () => {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    
+    const handleChange = (e: MediaQueryListEvent) => {
       // 只有当用户没有手动设置过主题时才自动切换
       if (!localStorage.getItem('userPreference')) {
-        setTheme(isNightTime() ? 'dark' : 'light');
+        setTheme(e.matches ? 'dark' : 'light');
       }
     };
 
-    // 每分钟检查一次时间
-    const interval = setInterval(checkTime, 60000);
+    // 添加监听器
+    mediaQuery.addEventListener('change', handleChange);
     
-    // 组件卸载时清除定时器
-    return () => clearInterval(interval);
+    // 清理监听器
+    return () => mediaQuery.removeEventListener('change', handleChange);
   }, []);
 
   const toggleTheme = () => {
