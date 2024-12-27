@@ -6,6 +6,7 @@ interface IStatProperties {
   className?: string;
   citySize?: number;
   onClick?: () => void;
+  valueClassName?: string;
 }
 
 const Stat = ({
@@ -14,9 +15,10 @@ const Stat = ({
   className = 'pb-2 w-full',
   citySize,
   onClick,
+  valueClassName,
 }: IStatProperties) => (
   <div className={`${className}`} onClick={onClick}>
-    <span className={`text-${citySize || 5}xl font-bold italic`}>
+    <span className={`text-${citySize || 5}xl font-bold italic ${valueClassName}`}>
       {intComma(value.toString())}
     </span>
     <span className="text-lg font-semibold italic">{description}</span>

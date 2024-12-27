@@ -72,7 +72,11 @@ const RunTable = ({
           <tr>
             <th />
             {Array.from(sortFuncMap.keys()).map((k) => (
-              <th key={k} onClick={handleClick}>
+              <th 
+                key={k} 
+                onClick={handleClick}
+                className="text-theme-text-light dark:text-[#cccccc]"
+              >
                 {k}
               </th>
             ))}

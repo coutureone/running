@@ -3,6 +3,7 @@ import React, {useRef, useCallback, useState, useEffect} from 'react';
 import Map, {Layer, Source, FullscreenControl, NavigationControl, MapRef} from 'react-map-gl';
 import {MapInstance} from "react-map-gl/src/types/lib";
 import useActivities from '@/hooks/useActivities';
+import { useTheme } from '@/hooks/useTheme';
 import {
   MAP_LAYER_LIST,
   IS_CHINESE,
@@ -43,6 +44,7 @@ const RunMap = ({
   thisYear,
 }: IRunMapProps) => {
   const { countries, provinces } = useActivities();
+  const { theme } = useTheme();
   const mapRef = useRef<MapRef>();
   const [lights, setLights] = useState(PRIVACY_MODE ? false : LIGHTS_ON);
   const keepWhenLightsOff = ['runs2']
@@ -145,7 +147,10 @@ const RunMap = ({
       {...viewState}
       onMove={onMove}
       style={style}
-      mapStyle="mapbox://styles/mapbox/dark-v10"
+      mapStyle={theme === 'dark' 
+        ? "mapbox://styles/mapbox/dark-v10" 
+        : "mapbox://styles/mapbox/navigation-day-v1"
+      }
       ref={mapRefCallback}
       mapboxAccessToken={MAPBOX_TOKEN}
     >
@@ -173,7 +178,7 @@ const RunMap = ({
           id="runs2"
           type="line"
           paint={{
-            'line-color':  ['get', 'color'],
+            'line-color': theme === 'dark' ? ['get', 'color'] : '#0066CC',
             'line-width': isBigMap && lights ? 1 : 2,
             'line-dasharray': dash,
             'line-opacity': isSingleRun || isBigMap || !lights ? 1 : LINE_OPACITY,
