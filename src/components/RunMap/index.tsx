@@ -178,7 +178,7 @@ const RunMap = ({
           id="runs2"
           type="line"
           paint={{
-            'line-color': theme === 'dark' ? ['get', 'color'] : '#0066CC',
+            'line-color': theme === 'dark' ? ['get', 'color'] : '#1d1d1f',
             'line-width': isBigMap && lights ? 1 : 2,
             'line-dasharray': dash,
             'line-opacity': isSingleRun || isBigMap || !lights ? 1 : LINE_OPACITY,
