@@ -6,13 +6,14 @@ export default {
     fontFamily: {
       sans: [
         '-apple-system',
-        'SF Pro Text',
-        'SF Pro Icons',
-        'PingFang SC',
+        'BlinkMacSystemFont',
+        'Segoe UI',
+        'Roboto',
+        'Oxygen-Sans',
+        'Ubuntu',
+        'Cantarell',
         'Helvetica Neue',
-        'Helvetica',
-        'Arial',
-        'sans-serif'
+        'sans-serif',
       ],
     },
     extend: {
