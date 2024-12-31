@@ -1,7 +1,6 @@
-## Acknowledgements:
+# 鸣谢
+* 感谢[yihong0618](https://github.com/yihong0618/running_page)开源此项目；
+* 本人在次项目基础上，增加一个白天模式，因为不太擅长代码，基本都是AI辅助完成；
 
-Special thanks to [yihong0618](https://github.com/yihong0618) for the open source of this project\~
-
-If you are also running and like to record in this way, you can leave a message on issues and I will put your running link on the blog\~
-
-## Record:
+### 以下是我的跑步记录
+  
