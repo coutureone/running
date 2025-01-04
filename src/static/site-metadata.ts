@@ -11,13 +11,13 @@ interface ISiteMetadataResult {
 
 const data: ISiteMetadataResult = {
   siteTitle: "Couture's Running Records",
-  siteUrl: 'https://blog.coutures.top',
+  siteUrl: 'https://run.coutures.top',
   logo: 'https://s3.qjqq.cn/50/673067575aa5c.webp!color',
   description: 'Personal site and blog',
   navLinks: [
     {
       name: 'Home',
-      url: 'https://coutures.top',
+      url: 'https://blog.coutures.top',
     },
     {
       name: 'Page’s Project',
