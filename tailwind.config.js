@@ -4,6 +4,7 @@ export default {
   theme: {
     fontFamily: {
       sans: [
+        '"LXGW WenKai Screen"',
         '-apple-system',
         'BlinkMacSystemFont',
         'Segoe UI',
