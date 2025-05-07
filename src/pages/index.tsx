@@ -214,15 +214,3 @@ const Index = () => {
 };
 
 export default Index;
-
-
-// 创建 script 标签
-const script = document.createElement('script');
-
-// 设置属性
-script.src = 'https://umami.coutures.top/script.js';
-script.defer = true;
-script.setAttribute('data-website-id', '2d4ac02b-c9ff-4dc4-9d86-2cc1772e025c');
-
-// 将 script 标签添加到页面的 <head> 中
-document.head.appendChild(script);

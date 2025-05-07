@@ -3,10 +3,9 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import viteTsconfigPaths from 'vite-tsconfig-paths';
 import svgr from 'vite-plugin-svgr';
-import path from 'path';
 
 // The following are known larger packages or packages that can be loaded asynchronously.
-const individuallyPackages = ['activities', 'github.svg', 'grid.svg'];
+const individuallyPackages = ['activities', 'github.svg', 'grid.svg', 'mol.svg'];
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -36,12 +35,6 @@ export default defineConfig({
       },
     }),
   ],
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src'),
-      '@assets': path.resolve(__dirname, './assets'),
-    },
-  },
   base: process.env.PATH_PREFIX || '/',
   define: {
     "import.meta.env.VERCEL": JSON.stringify(process.env.VERCEL),

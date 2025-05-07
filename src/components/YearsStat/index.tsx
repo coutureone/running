@@ -10,23 +10,25 @@ const YearsStat = ({ year, onClick }: { year: string, onClick: (_year: string) =
   yearsArrayUpdate = yearsArrayUpdate.filter((x) => x !== year);
   yearsArrayUpdate.unshift(year);
 
+  // for short solution need to refactor
   return (
     <div className="w-full lg:w-full pb-16 pr-16 lg:pr-16">
       <section className="pb-0">
-        <p className="leading-relaxed text-theme-text-light dark:text-theme-text-dark">
+        <p className="leading-relaxed">
           {INFO_MESSAGE(years.length, year)}
           <br />
         </p>
       </section>
       <hr color="red" />
       {yearsArrayUpdate.map((year) => (
-        <YearStat 
-          key={year} 
-          year={year} 
-          onClick={onClick} 
-          valueClassName="text-theme-text-light dark:text-theme-text-dark"
-        />
+        <YearStat key={year} year={year} onClick={onClick} />
       ))}
+      {// eslint-disable-next-line no-prototype-builtins
+        yearsArrayUpdate.hasOwnProperty('Total') ? (
+          <YearStat key="Total" year="Total" onClick={onClick} />
+        ) : (
+          <div />
+        )}
     </div>
   );
 };
