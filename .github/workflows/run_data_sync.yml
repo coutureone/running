@@ -103,7 +103,7 @@ jobs:
       - name: Run sync Keep script
         if: env.RUN_TYPE == 'keep'
         run: |
-          python run_page/keep_sync.py ${{ secrets.KEEP_MOBILE }} ${{ secrets.KEEP_PASSWORD }} --with-gpx
+          python run_page/keep_sync.py ${{ secrets.KEEP_MOBILE }} ${{ secrets.KEEP_PASSWORD }} --with-gpx --sync-types running cycling hiking
 
       - name: Run sync Coros script
         if: env.RUN_TYPE == 'coros'
