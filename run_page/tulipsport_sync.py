@@ -30,7 +30,6 @@ def get_all_activity_summaries(session, headers, start_time=None):
     start_time_str = start_time.strftime("%Y-%m-%d %H:%M:%S")
     end_time_str = datetime.now(tz=DEFAULT_TIMEZONE).strftime("%Y-%m-%d %H:%M:%S")
     result = []
-    # 接口全量返回，非分页模式
     r = session.get(
         ACTIVITY_LIST_API.format(
             start_time=quote(start_time_str), end_time=quote(end_time_str)
@@ -70,7 +69,6 @@ def get_all_activity_summaries(session, headers, start_time=None):
                         "outdoor": summary["location"] != ",,",
                     }
                 )
-            summary_list_length = len(summary_list)
     return result
 
 
@@ -246,8 +244,8 @@ def save_activity_gpx(summary, detail, track):
         file_path = os.path.join(GPX_FOLDER, str(activity_id) + ".gpx")
         with open(file_path, "w") as fb:
             fb.write(gpx.to_xml())
-    except:
-        print(f"saving tulipsort activity {activity_id} gpx occurs errors")
+    except Exception as e:
+        print(f"saving tulipsport activity {activity_id} gpx occurs errors: {str(e)}")
         pass
 
 
