@@ -42,8 +42,8 @@
     --svg-color-active-cell: var(--color-neutral-400);
     --svg-special-color: #d4a574;
     --svg-special-color2: #c5756b;
-    --font-sans: 'LXGW WenKai Screen', sans-serif;
-    --font-mono: 'LXGW WenKai Screen', monospace;
+    --font-sans: 'IBM Plex Sans', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
   }
 }
 
@@ -63,8 +63,8 @@
     --svg-color-active-cell: #4dd2ff;
     --svg-special-color: #f7d02c;
     --svg-special-color2: #f56c6c;
-    --font-sans: 'LXGW WenKai Screen', sans-serif;
-    --font-mono: 'LXGW WenKai Screen', monospace;
+    --font-sans: 'IBM Plex Sans', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
   }
 }
 
@@ -84,8 +84,8 @@
   --svg-color-active-cell: var(--color-neutral-400);
   --svg-special-color: #d4a574;
   --svg-special-color2: #c5756b;
-  --font-sans: 'LXGW WenKai Screen', sans-serif;
-  --font-mono: 'LXGW WenKai Screen', monospace;
+  --font-sans: 'IBM Plex Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
 }
 
 [data-theme='dark'] {
@@ -103,8 +103,8 @@
   --svg-color-active-cell: #4dd2ff;
   --svg-special-color: #f7d02c;
   --svg-special-color2: #f56c6c;
-  --font-sans: 'LXGW WenKai Screen', sans-serif;
-  --font-mono: 'LXGW WenKai Screen', monospace;
+  --font-sans: 'IBM Plex Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
 }
 
 @layer base {
