@@ -282,15 +282,15 @@ sdist = { url = "https://files.pythonhosted.org/packages/e7/a2/d48e4513355c92a32
 
 [[package]]
 name = "fit-tool"
-version = "0.9.13"
+version = "0.9.14"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "bitstruct" },
     { name = "openpyxl" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/0c/8f/9446c4eb9a8e5720b18848b3036653c4fdd0b58746e2c62f1eef05e7632b/fit-tool-0.9.13.tar.gz", hash = "sha256:63d5655dbacf4121178e7743ad4cf0d980abd53da6316a419c205941ce049c55", size = 137841, upload-time = "2022-10-05T18:31:20.446Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/e0/b1/d23a3b8121c522471807e78b26476c42ceefc54ae547eb697b6f5a93441d/fit_tool-0.9.14.tar.gz", hash = "sha256:ae4e9a414f42be5e4eb2addb6703fd4f48dec5e281b1acfca56509c9117a0071", size = 137210, upload-time = "2026-01-28T02:21:18.638Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/3d/c1/27e6ff55c0bca9b61b374f72dad8143908b1d1e792e04e2dbd74ade26857/fit_tool-0.9.13-py3-none-any.whl", hash = "sha256:15269280635ff3a4baedfe1346840767f660817f136f4dec69b858ee855a9e9c", size = 224079, upload-time = "2022-10-05T18:31:18.298Z" },
+    { url = "https://files.pythonhosted.org/packages/56/e0/f189bfd3af1327096beaac22dff7d1ecf10885da3b5fd84228ee31b81e28/fit_tool-0.9.14-py3-none-any.whl", hash = "sha256:490083406fb2af097b45377255ba3f7f4c0836cfba07ba48bb9002805cb72616", size = 224167, upload-time = "2026-01-28T02:21:16.523Z" },
 ]
 
 [[package]]
@@ -727,11 +727,11 @@ wheels = [
 
 [[package]]
 name = "polyline"
-version = "2.0.2"
+version = "2.0.4"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/1d/2f/e6a437b785d951867882b9fba52a70b81fe8af778bbb4d96b6fb69630f72/polyline-2.0.2.tar.gz", hash = "sha256:10541e759c5fd51f746ee304e9af94744089a4055b6257b293b3afd1df64e369", size = 6400, upload-time = "2024-02-12T16:56:19.247Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/2c/c1/1a6ee4f9f02a55b2a9241bbadd342970160f7e42423307f21ee8f5530d4e/polyline-2.0.4.tar.gz", hash = "sha256:f05ade694522bf1720febebe1672f820f43a13c6a1664751e7769d47e8ca9b1b", size = 8261, upload-time = "2025-12-02T17:55:22.735Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/d7/4f/fbf07370cbf98af0098de83a26625d29aaa0bf73ef7123b561459729f3e6/polyline-2.0.2-py3-none-any.whl", hash = "sha256:389655c893bdabf2863c6aaa49490cf83dcdcec86ae715f67044ee98be57bef5", size = 5970, upload-time = "2024-02-12T16:56:18.145Z" },
+    { url = "https://files.pythonhosted.org/packages/34/a8/4ebd3cb31d380e018efb1c8bf92664b196a41aba19506015b682af2587b9/polyline-2.0.4-py3-none-any.whl", hash = "sha256:a4e0c15b8ecb32915559f8cf210f1f8c2f5cc53d3cd32c91d7c1668d6e936e10", size = 7167, upload-time = "2025-12-02T17:55:20.323Z" },
 ]
 
 [[package]]
