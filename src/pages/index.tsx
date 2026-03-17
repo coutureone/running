@@ -7,6 +7,7 @@ import RunMap from '@/components/RunMap';
 import RunTable from '@/components/RunTable';
 import SVGStat from '@/components/SVGStat';
 import YearsStat from '@/components/YearsStat';
+import YearSummaryModal from '@/components/YearSummaryModal';
 import useActivities from '@/hooks/useActivities';
 import useSiteMetadata from '@/hooks/useSiteMetadata';
 import { useInterval } from '@/hooks/useInterval';
@@ -25,11 +26,12 @@ import {
   titleForShow,
   RunIds,
 } from '@/utils/utils';
-import { useTheme } from '@/hooks/useTheme';
+import { useTheme, useThemeChangeCounter } from '@/hooks/useTheme';
 
 const Index = () => {
   const { siteTitle, siteUrl } = useSiteMetadata();
   const { activities, thisYear } = useActivities();
+  const themeChangeCounter = useThemeChangeCounter();
   const [year, setYear] = useState(thisYear);
   const [runIndex, setRunIndex] = useState(-1);
   const [title, setTitle] = useState('');
@@ -47,6 +49,11 @@ const Index = () => {
 
   // Animation trigger for single runs - increment this to force animation replay
   const [animationTrigger, setAnimationTrigger] = useState(0);
+
+  // Year summary modal state
+  const [selectedYearSummary, setSelectedYearSummary] = useState<string | null>(
+    null
+  );
 
   const selectedRunIdRef = useRef<number | null>(null);
   const selectedRunDateRef = useRef<string | null>(null);
@@ -94,7 +101,7 @@ const Index = () => {
 
   const geoData = useMemo(() => {
     return geoJsonForRuns(runs);
-  }, [runs]);
+  }, [runs, themeChangeCounter]);
 
   // for auto zoom
   const bounds = useMemo(() => {
@@ -202,6 +209,14 @@ const Index = () => {
     },
     [changeByItem]
   );
+
+  const openYearSummary = useCallback((y: string) => {
+    setSelectedYearSummary(y);
+  }, []);
+
+  const closeYearSummary = useCallback(() => {
+    setSelectedYearSummary(null);
+  }, []);
 
   // For RunTable compatibility - create a mock setActivity function
   const setActivity = useCallback((_newRuns: Activity[]) => {
@@ -385,7 +400,11 @@ const Index = () => {
             changeTitle={changeTitle}
           />
         ) : (
-          <YearsStat year={year} onClick={changeYear} />
+          <YearsStat
+            year={year}
+            onClick={changeYear}
+            onYearSummaryClick={openYearSummary}
+          />
         )}
       </div>
       <div className="w-full lg:w-2/3" id="map-container">
@@ -412,6 +431,12 @@ const Index = () => {
       </div>
       {/* Enable Audiences in Vercel Analytics: https://vercel.com/docs/concepts/analytics/audiences/quickstart */}
       {import.meta.env.VERCEL && <Analytics />}
+      {selectedYearSummary && (
+        <YearSummaryModal
+          year={selectedYearSummary}
+          onClose={closeYearSummary}
+        />
+      )}
     </Layout>
   );
 };
