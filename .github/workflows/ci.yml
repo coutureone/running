@@ -8,9 +8,9 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: ['3.11', '3.12', '3.13'] # Added Python 3.13 to the matrix
+        python-version: ['3.12', '3.13', '3.14'] # Added Python 3.13 to the matrix
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           persist-credentials: false
@@ -44,9 +44,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [20, 22]
+        node: [20, 22, 24]
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           persist-credentials: false
