@@ -17,7 +17,7 @@ const getBasePath = () => {
 const data: ISiteMetadataResult = {
   siteTitle: "Couture's Running Records",
   siteUrl: 'https://run.xcouture.cc',
-  logo: 'https://s3.qjqq.cn/50/673067575aa5c.webp!color',
+  logo: 'https://cdn.jsdelivr.net/gh/coutureone/gitblog@main/img/%20running.jpg',
   description: 'Personal site and blog',
   navLinks: [
     {
