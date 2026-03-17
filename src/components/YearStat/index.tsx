@@ -3,22 +3,33 @@ import Stat from '@/components/Stat';
 import useActivities from '@/hooks/useActivities';
 import { formatPace } from '@/utils/utils';
 import useHover from '@/hooks/useHover';
-import { yearStats } from '@assets/index';
+import { yearStats, githubYearStats } from '@assets/index';
 import { loadSvgComponent } from '@/utils/svgUtils';
 import { SHOW_ELEVATION_GAIN } from '@/utils/const';
 
 const YearStat = ({
   year,
   onClick,
+  onYearSummaryClick,
 }: {
   year: string;
   onClick: (_year: string) => void;
+  onYearSummaryClick?: (_year: string) => void;
 }) => {
   let { activities: runs, years } = useActivities();
   // for hover
   const [hovered, eventHandlers] = useHover();
   // lazy Component
   const YearSVG = lazy(() => loadSvgComponent(yearStats, `./year_${year}.svg`));
+  const GithubYearSVG = lazy(() =>
+    loadSvgComponent(githubYearStats, `./github_${year}.svg`)
+  );
+
+  const handleDoubleClick = () => {
+    if (onYearSummaryClick && year !== 'Total') {
+      onYearSummaryClick(year);
+    }
+  };
 
   if (years.includes(year)) {
     runs = runs.filter((run) => run.start_date_local.slice(0, 4) === year);
@@ -59,7 +70,11 @@ const YearStat = ({
     0
   );
   return (
-    <div className="cursor-pointer" onClick={() => onClick(year)}>
+    <div
+      className="cursor-pointer"
+      onClick={() => onClick(year)}
+      onDoubleClick={handleDoubleClick}
+    >
       <section {...eventHandlers}>
         <Stat value={year} description=" Journey" />
         <Stat value={runs.length} description=" Runs" />
@@ -76,6 +91,7 @@ const YearStat = ({
       {year !== 'Total' && hovered && (
         <Suspense fallback="loading...">
           <YearSVG className="year-svg my-4 h-4/6 w-4/6 border-0 p-0" />
+          <GithubYearSVG className="github-year-svg my-4 h-auto w-full border-0 p-0" />
         </Suspense>
       )}
       <hr />
