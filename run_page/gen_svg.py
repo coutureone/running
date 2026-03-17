@@ -11,6 +11,7 @@ from gpxtrackposter import (
     poster,
     track_loader,
     month_of_life_drawer,
+    year_summary_drawer,
 )
 from gpxtrackposter.exceptions import ParameterError, PosterError
 
@@ -28,6 +29,7 @@ def main():
         "circular": circular_drawer.CircularDrawer(p),
         "github": github_drawer.GithubDrawer(p),
         "monthoflife": month_of_life_drawer.MonthOfLifeDrawer(p),
+        "year_summary": year_summary_drawer.YearSummaryDrawer(p),
     }
 
     args_parser = argparse.ArgumentParser()
@@ -237,8 +239,9 @@ def main():
 
     is_circular = args.type == "circular"
     is_mol = args.type == "monthoflife"
+    is_year_summary = args.type == "year_summary"
 
-    if not is_circular and not is_mol:
+    if not is_circular and not is_mol and not is_year_summary:
         print(
             f"Creating poster of type {args.type} with {len(tracks)} tracks and storing it in file {args.output}..."
         )
@@ -268,6 +271,8 @@ def main():
     p.drawer_type = "plain" if is_circular else "title"
     if is_mol:
         p.drawer_type = "monthoflife"
+    if is_year_summary:
+        p.drawer_type = "year_summary"
     if args.type == "github":
         p.height = 55 + p.years.real_year * 43
     p.github_style = args.github_style
@@ -291,6 +296,19 @@ def main():
             # may be refactor
             p.set_tracks(tracks)
             p.draw(drawers[args.type], os.path.join(output_dir, f"year_{str(y)}.svg"))
+    elif is_year_summary:
+        years = p.years.all()[:]
+        output_dir = os.path.dirname(args.output) or "assets"
+        summary_year = args.summary_year
+        if summary_year is None:
+            for y in years:
+                p.years.from_year, p.years.to_year = y, y
+                p.set_tracks(tracks)
+                p.draw(drawers[args.type], os.path.join(output_dir, f"year_summary_{str(y)}.svg"))
+        else:
+            p.years.from_year, p.years.to_year = summary_year, summary_year
+            p.set_tracks(tracks)
+            p.draw(drawers[args.type], os.path.join(output_dir, f"year_summary_{str(summary_year)}.svg"))
     else:
         p.draw(drawers[args.type], args.output)
 
