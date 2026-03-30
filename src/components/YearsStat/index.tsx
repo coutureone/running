@@ -35,6 +35,10 @@ const YearsStat = ({
         <p className="leading-relaxed">
           {infoMessage}
           <br />
+          <br />
+          何为强大？何为奔跑？何为生存？一切都在风之彼方。希望就在我们各自心中。看啊，道路就在我们脚下。所以我们要奔跑于今天。一直奔跑，直到永恒。
+          <br />
+          <span className="float-right">——《强风吹拂》</span>
         </p>
       </section>
       <hr />
