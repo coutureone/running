@@ -394,22 +394,22 @@ const Index = () => {
           <a href={siteUrl}>{siteTitle}</a>
         </h1>
         <div className="my-12">
-        {(viewState.zoom ?? 0) <= 3 && IS_CHINESE ? (
-          <LocationStat
-            changeYear={changeYear}
-            changeCity={changeCity}
-            changeTitle={changeTitle}
-          />
-        ) : (
-          <YearsStat
-            year={year}
-            onClick={changeYear}
-            onYearSummaryClick={openYearSummary}
-          />
-        )}
+          {(viewState.zoom ?? 0) <= 3 && IS_CHINESE ? (
+            <LocationStat
+              changeYear={changeYear}
+              changeCity={changeCity}
+              changeTitle={changeTitle}
+            />
+          ) : (
+            <YearsStat
+              year={year}
+              onClick={changeYear}
+              onYearSummaryClick={openYearSummary}
+            />
+          )}
         </div>
-        </div>
-        <div className="w-full lg:w-2/3" id="map-container">
+      </div>
+      <div className="w-full lg:w-2/3" id="map-container">
         <RunMap
           title={title}
           viewState={viewState}
