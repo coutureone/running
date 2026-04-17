@@ -304,11 +304,17 @@ def main():
             for y in years:
                 p.years.from_year, p.years.to_year = y, y
                 p.set_tracks(tracks)
-                p.draw(drawers[args.type], os.path.join(output_dir, f"year_summary_{str(y)}.svg"))
+                p.draw(
+                    drawers[args.type],
+                    os.path.join(output_dir, f"year_summary_{str(y)}.svg"),
+                )
         else:
             p.years.from_year, p.years.to_year = summary_year, summary_year
             p.set_tracks(tracks)
-            p.draw(drawers[args.type], os.path.join(output_dir, f"year_summary_{str(summary_year)}.svg"))
+            p.draw(
+                drawers[args.type],
+                os.path.join(output_dir, f"year_summary_{str(summary_year)}.svg"),
+            )
     else:
         p.draw(drawers[args.type], args.output)
 
