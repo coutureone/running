@@ -12,6 +12,7 @@ on:
       - run_page/nike_to_strava_sync.py
       - run_page/strava_sync.py
       - run_page/gen_svg.py
+      - run_page/garmin_sync.py
       - run_page/coros_sync.py
       - run_page/keep_sync.py
       - run_page/gpx_sync.py
