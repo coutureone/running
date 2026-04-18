@@ -8,6 +8,9 @@ import asyncio
 import datetime as dt
 import logging
 import os
+
+os.environ["GARTH_TELEMETRY_ENABLED"] = "false"
+
 import sys
 import time
 import traceback

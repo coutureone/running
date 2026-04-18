@@ -9,9 +9,10 @@ import os
 import sys
 
 
-from config import FIT_FOLDER, GPX_FOLDER
+from config import FIT_FOLDER, GPX_FOLDER, JSON_FILE, SQL_FILE
 from garmin_sync import Garmin, get_downloaded_ids
 from garmin_sync import download_new_activities
+from utils import make_activities_file
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
