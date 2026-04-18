@@ -10,7 +10,6 @@ import xml.etree.ElementTree as ET
 from collections import namedtuple
 from datetime import datetime, timedelta, timezone
 from xml.dom import minidom
-
 import eviltransform
 import gpxpy
 import numpy as np
@@ -285,18 +284,24 @@ def tcx_job(run_data):
         for own_step in own_steps:
             [single_time, single_step] = own_step[0:2]
             # firstly, convert 2025-09-16 20:08:00 to 2025-09-16T20:08:00
-            single_time = single_time.replace(" ", "T")
+            # also,    convert 2015-09-16+20:08:00 to 2015-09-16T20:08:00
+            single_time = single_time.replace(" ", "T").replace("+", "T")
             # move to UTC
             utc = adjust_time_to_utc(to_date(single_time), str(get_localzone()))
             time_stamp = utc.strftime("%Y-%m-%dT%H:%M:%SZ")
             # to time array
             time_array = time.strptime(time_stamp, "%Y-%m-%dT%H:%M:%SZ")
             # to unix timestamp
-            unix_time = int(time.mktime(time_array))
+            try:
+                unix_time = int(time.mktime(time_array))
+            except OverflowError as e:
+                print(e, time_stamp)
+                continue
+
             fit_steps[unix_time] = int(single_step)
 
     # get single track point
-    if len(own_points) > 0:
+    if own_points:
         for point in own_points:
             time_stamp = point.get("time_stamp")
             latitude = point.get("latitude")
@@ -309,7 +314,11 @@ def tcx_job(run_data):
             # to time array
             time_array = time.strptime(time_stamp, "%Y-%m-%dT%H:%M:%SZ")
             # to unix timestamp
-            unix_time = int(time.mktime(time_array))
+            try:
+                unix_time = int(time.mktime(time_array))
+            except OverflowError as e:
+                print(e, time_stamp)
+                continue
 
             # get heart rate at unix_time
             hr = fit_hrs.get(unix_time, None)
@@ -542,13 +551,16 @@ class Codoon:
         return datetime.strptime(dt, "%Y-%m-%dT%H:%M:%S")
 
     def parse_raw_data_to_namedtuple(
-        self, run_data, old_gpx_ids, with_gpx=False, with_tcx=False
+        self, run_data, old_gpx_ids, old_tcx_ids=None, with_gpx=False, with_tcx=False
     ):
         run_data = run_data["data"]
         log_id = run_data["id"]
 
         if with_tcx:
-            tcx_job(run_data)  # TCX part
+            if old_tcx_ids is not None and str(log_id) in old_tcx_ids:
+                print(f"skip existing tcx for codoon id {log_id}")
+            else:
+                tcx_job(run_data)  # TCX part
 
         start_time = run_data.get("start_time")
         if not start_time:
@@ -623,15 +635,21 @@ class Codoon:
     def get_old_tracks(self, old_ids, with_gpx=False, with_tcx=False):
         run_records = self.get_runs_records()
 
-        old_gpx_ids = os.listdir(GPX_FOLDER)
-        old_gpx_ids = [i.split(".")[0] for i in old_gpx_ids if not i.startswith(".")]
+        old_gpx_ids = os.listdir(GPX_FOLDER) if os.path.isdir(GPX_FOLDER) else []
+        old_gpx_ids = {i.split(".")[0] for i in old_gpx_ids if not i.startswith(".")}
+        old_tcx_ids = set()
+        if with_tcx:
+            old_tcx_files = os.listdir(TCX_FOLDER) if os.path.isdir(TCX_FOLDER) else []
+            old_tcx_ids = {
+                i.split(".")[0] for i in old_tcx_files if not i.startswith(".")
+            }
         new_run_routes = [i for i in run_records if str(i["log_id"]) not in old_ids]
         tracks = []
         for i in new_run_routes:
             run_data = self.get_single_run_record(i["route_id"])
             run_data["data"]["id"] = i["log_id"]
             track = self.parse_raw_data_to_namedtuple(
-                run_data, old_gpx_ids, with_gpx, with_tcx
+                run_data, old_gpx_ids, old_tcx_ids, with_gpx, with_tcx
             )
             if track:
                 tracks.append(track)

@@ -90,10 +90,9 @@ if __name__ == "__main__":
 
     # Step 2:
     # Generate track from fit/gpx file
-    # Commented out to avoid duplicate data on page display, since Keep provides the data
-    # make_activities_file(
-    #     SQL_FILE, GPX_FOLDER, JSON_FILE, file_suffix="gpx", activity_title_dict=id2title
-    # )
-    # make_activities_file(
-    #     SQL_FILE, FIT_FOLDER, JSON_FILE, file_suffix="fit", activity_title_dict=id2title
-    # )
+    make_activities_file(
+        SQL_FILE, GPX_FOLDER, JSON_FILE, file_suffix="gpx", activity_title_dict=id2title
+    )
+    make_activities_file(
+        SQL_FILE, FIT_FOLDER, JSON_FILE, file_suffix="fit", activity_title_dict=id2title
+    )

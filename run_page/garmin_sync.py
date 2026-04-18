@@ -10,7 +10,6 @@ import logging
 import os
 
 os.environ["GARTH_TELEMETRY_ENABLED"] = "false"
-
 import sys
 import time
 import traceback
