@@ -7,7 +7,6 @@ import RunMap from '@/components/RunMap';
 import RunTable from '@/components/RunTable';
 import SVGStat from '@/components/SVGStat';
 import YearsStat from '@/components/YearsStat';
-import YearSummaryModal from '@/components/YearSummaryModal';
 import useActivities from '@/hooks/useActivities';
 import useSiteMetadata from '@/hooks/useSiteMetadata';
 import { useInterval } from '@/hooks/useInterval';
@@ -49,11 +48,6 @@ const Index = () => {
 
   // Animation trigger for single runs - increment this to force animation replay
   const [animationTrigger, setAnimationTrigger] = useState(0);
-
-  // Year summary modal state
-  const [selectedYearSummary, setSelectedYearSummary] = useState<string | null>(
-    null
-  );
 
   const selectedRunIdRef = useRef<number | null>(null);
   const selectedRunDateRef = useRef<string | null>(null);
@@ -210,14 +204,6 @@ const Index = () => {
     [changeByItem]
   );
 
-  const openYearSummary = useCallback((y: string) => {
-    setSelectedYearSummary(y);
-  }, []);
-
-  const closeYearSummary = useCallback(() => {
-    setSelectedYearSummary(null);
-  }, []);
-
   // For RunTable compatibility - create a mock setActivity function
   const setActivity = useCallback((_newRuns: Activity[]) => {
     // Since we're using memoized runs, we can't directly set activity
@@ -294,13 +280,16 @@ const Index = () => {
   );
 
   // Auto locate activity when singleRunId is set and activities are loaded
+  // First, detect the run's year and switch to it if needed
   useEffect(() => {
     if (singleRunId !== null && activities.length > 0) {
-      // Check if the run exists in our activities
-      const runExists = activities.some((run) => run.run_id === singleRunId);
-      if (runExists) {
-        // Automatically simulate clicking the single run
-        locateActivity([singleRunId]);
+      const targetRun = activities.find((run) => run.run_id === singleRunId);
+      if (targetRun) {
+        const runYear = targetRun.start_date_local.slice(0, 4);
+        if (year !== runYear) {
+          setYear(runYear);
+          setCurrentFilter({ item: runYear, func: filterYearRuns });
+        }
       } else {
         // If run doesn't exist, clear the hash and show a warning
         console.warn(`Run with ID ${singleRunId} not found in activities`);
@@ -308,20 +297,35 @@ const Index = () => {
         setSingleRunId(null);
       }
     }
-  }, [singleRunId, activities, locateActivity]);
+  }, [singleRunId, activities]);
+
+  useEffect(() => {
+    if (singleRunId !== null && runs.length > 0) {
+      const runExistsInCurrentRuns = runs.some(
+        (run) => run.run_id === singleRunId
+      );
+      if (runExistsInCurrentRuns) {
+        locateActivity([singleRunId]);
+      }
+    }
+  }, [runs, singleRunId, locateActivity]);
 
   // Update bounds when geoData changes
   useEffect(() => {
-    setViewState((prev) => ({
-      ...prev,
-      ...bounds,
-    }));
-  }, [bounds]);
+    if (singleRunId === null) {
+      setViewState((prev) => ({
+        ...prev,
+        ...bounds,
+      }));
+    }
+  }, [bounds, singleRunId]);
 
   // Animate geoData when runs change
   useEffect(() => {
-    startAnimation(runs);
-  }, [runs, startAnimation]);
+    if (singleRunId === null) {
+      startAnimation(runs);
+    }
+  }, [runs, startAnimation, singleRunId]);
 
   useEffect(() => {
     if (year !== 'Total') {
@@ -390,24 +394,18 @@ const Index = () => {
         <html lang="en" data-theme={theme} />
       </Helmet>
       <div className="w-full lg:w-1/3">
-        <h1 className="mt-6 text-5xl font-extrabold italic">
+        <h1 className="my-12 mt-6 text-5xl font-extrabold italic">
           <a href={siteUrl}>{siteTitle}</a>
         </h1>
-        <div className="my-12">
-          {(viewState.zoom ?? 0) <= 3 && IS_CHINESE ? (
-            <LocationStat
-              changeYear={changeYear}
-              changeCity={changeCity}
-              changeTitle={changeTitle}
-            />
-          ) : (
-            <YearsStat
-              year={year}
-              onClick={changeYear}
-              onYearSummaryClick={openYearSummary}
-            />
-          )}
-        </div>
+        {(viewState.zoom ?? 0) <= 3 && IS_CHINESE ? (
+          <LocationStat
+            changeYear={changeYear}
+            changeCity={changeCity}
+            changeTitle={changeTitle}
+          />
+        ) : (
+          <YearsStat year={year} onClick={changeYear} />
+        )}
       </div>
       <div className="w-full lg:w-2/3" id="map-container">
         <RunMap
@@ -433,12 +431,6 @@ const Index = () => {
       </div>
       {/* Enable Audiences in Vercel Analytics: https://vercel.com/docs/concepts/analytics/audiences/quickstart */}
       {import.meta.env.VERCEL && <Analytics />}
-      {selectedYearSummary && (
-        <YearSummaryModal
-          year={selectedYearSummary}
-          onClose={closeYearSummary}
-        />
-      )}
     </Layout>
   );
 };
