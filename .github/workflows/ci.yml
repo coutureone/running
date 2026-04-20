@@ -8,7 +8,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: ['3.12', '3.13', '3.14']
+        python-version: ['3.12', '3.13', '3.14'] # Added Python 3.13 to the matrix
     steps:
       - uses: actions/checkout@v4
         with:
@@ -33,7 +33,7 @@ jobs:
           python run_page/gpx_sync.py
 
       - name: Check formatting (black)
-        run: black . --diff --color && black . --check
+        run: black . --target-version py313 --diff --color && black . --target-version py313 --check
 
       - name: Lint with Ruff
         run: |

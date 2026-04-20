@@ -15,9 +15,9 @@ const getBasePath = () => {
 };
 
 const data: ISiteMetadataResult = {
-  siteTitle: 'Running Page',
-  siteUrl: 'https://yihong.run',
-  logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTtc69JxHNcmN1ETpMUX4dozAgAN6iPjWalQ&usqp=CAU',
+  siteTitle: "Couture's Running Records",
+  siteUrl: 'https://run.xcouture.cc',
+  logo: 'https://cdn.jsdelivr.net/gh/coutureone/gitblog@main/img/%20running.jpg',
   description: 'Personal site and blog',
   navLinks: [
     {
@@ -25,11 +25,11 @@ const data: ISiteMetadataResult = {
       url: `${getBasePath()}/summary`,
     },
     {
-      name: 'Blog',
-      url: 'https://github.com/yihong0618/gitblog',
+      name: 'Home',
+      url: 'https://blog.xcouture.cc',
     },
     {
-      name: 'About',
+      name: 'Page’s Project',
       url: 'https://github.com/yihong0618/running_page/blob/master/README-CN.md',
     },
   ],
