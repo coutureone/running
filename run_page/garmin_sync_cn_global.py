@@ -89,10 +89,5 @@ if __name__ == "__main__":
     loop.run_until_complete(future)
 
     # Step 2:
-    # Generate track from fit/gpx file
-    make_activities_file(
-        SQL_FILE, GPX_FOLDER, JSON_FILE, file_suffix="gpx", activity_title_dict=id2title
-    )
-    make_activities_file(
-        SQL_FILE, FIT_FOLDER, JSON_FILE, file_suffix="fit", activity_title_dict=id2title
-    )
+    # Generate track from fit/gpx file is removed as per user request to only display Keep data
+    pass
