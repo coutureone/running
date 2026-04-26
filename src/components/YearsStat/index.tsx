@@ -38,9 +38,7 @@ const YearsStat = ({
           <br />
           因为全身细胞都在蠢蠢欲动，想要感受强风迎面吹拂的滋味。
         </p>
-        <p className="text-right leading-relaxed">
-          —— 强风吹拂
-        </p>
+        <p className="text-right leading-relaxed">—— 强风吹拂</p>
       </section>
       <hr />
       {yearsArrayUpdate.map((yearItem) => (
