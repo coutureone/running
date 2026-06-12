@@ -11,7 +11,6 @@ import time
 
 from config import FOLDER_DICT
 from garmin_sync import download_new_activities, get_downloaded_ids
-from strava_sync import run_strava_sync
 from utils import make_strava_client, upload_file_to_strava
 
 if __name__ == "__main__":
@@ -76,10 +75,3 @@ if __name__ == "__main__":
             time.sleep(10)
         index += 1
         time.sleep(1)
-
-    # Run the strava sync
-    run_strava_sync(
-        options.strava_client_id,
-        options.strava_client_secret,
-        options.strava_refresh_token,
-    )
