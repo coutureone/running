@@ -10,8 +10,12 @@ import sys
 
 
 from config import FIT_FOLDER, GPX_FOLDER
-from garmin_sync import Garmin, get_downloaded_ids
-from garmin_sync import download_new_activities
+from garmin_sync import (
+    Garmin,
+    append_strava_pending_ids,
+    download_new_activities,
+    get_downloaded_ids,
+)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -64,6 +68,7 @@ if __name__ == "__main__":
     )
     loop.run_until_complete(future)
     new_ids, id2title = future.result()
+    append_strava_pending_ids(new_ids)
 
     to_upload_files = []
     for i in new_ids:

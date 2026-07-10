@@ -6,6 +6,7 @@ Copy most code from https://github.com/cyberjunky/python-garminconnect
 import argparse
 import asyncio
 import datetime as dt
+import json
 import logging
 import os
 
@@ -20,7 +21,7 @@ from lxml import etree
 import aiofiles
 import garth
 import httpx
-from config import FOLDER_DICT, JSON_FILE, SQL_FILE
+from config import FOLDER_DICT, JSON_FILE, SQL_FILE, STRAVA_PENDING_FILE
 from garmin_device_adaptor import process_garmin_data
 from utils import make_activities_file
 
@@ -327,6 +328,24 @@ async def gather_with_concurrency(n, tasks):
 
 def get_downloaded_ids(folder):
     return [i.split(".")[0] for i in os.listdir(folder) if not i.startswith(".")]
+
+
+def append_strava_pending_ids(activity_ids):
+    """Remember Garmin activities that still need to be uploaded to Strava."""
+    if not activity_ids:
+        return
+
+    pending_ids = []
+    if os.path.exists(STRAVA_PENDING_FILE):
+        try:
+            with open(STRAVA_PENDING_FILE, "r", encoding="utf-8") as f:
+                pending_ids = [str(value) for value in json.load(f)]
+        except (OSError, TypeError, ValueError):
+            pending_ids = []
+
+    merged_ids = list(dict.fromkeys(pending_ids + [str(value) for value in activity_ids]))
+    with open(STRAVA_PENDING_FILE, "w", encoding="utf-8") as f:
+        json.dump(merged_ids, f, indent=2)
 
 
 def get_garmin_summary_infos(activity_summary, activity_id):
