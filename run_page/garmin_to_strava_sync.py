@@ -29,7 +29,7 @@ def load_pending_ids():
 def save_pending_ids(activity_ids):
     if activity_ids:
         with open(STRAVA_PENDING_FILE, "w", encoding="utf-8") as f:
-            json.dump(activity_ids, f, indent=2)
+            f.write(json.dumps(activity_ids, separators=(",", ":")) + "\n")
     elif os.path.exists(STRAVA_PENDING_FILE):
         os.remove(STRAVA_PENDING_FILE)
 

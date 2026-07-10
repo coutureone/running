@@ -345,7 +345,7 @@ def append_strava_pending_ids(activity_ids):
 
     merged_ids = list(dict.fromkeys(pending_ids + [str(value) for value in activity_ids]))
     with open(STRAVA_PENDING_FILE, "w", encoding="utf-8") as f:
-        json.dump(merged_ids, f, indent=2)
+        f.write(json.dumps(merged_ids, separators=(",", ":")) + "\n")
 
 
 def get_garmin_summary_infos(activity_summary, activity_id):
