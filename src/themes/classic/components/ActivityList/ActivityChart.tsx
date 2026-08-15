@@ -21,7 +21,7 @@ interface ActivityChartProps {
 }
 
 const ActivityChart = ({ data, yAxisMax, yAxisTicks }: ActivityChartProps) => (
-  <ResponsiveContainer>
+  <ResponsiveContainer initialDimension={{ width: 248, height: 250 }}>
     <BarChart data={data} margin={{ top: 20, right: 20, left: -20, bottom: 5 }}>
       <CartesianGrid
         strokeDasharray="3 3"
