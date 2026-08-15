@@ -343,7 +343,9 @@ def append_strava_pending_ids(activity_ids):
         except (OSError, TypeError, ValueError):
             pending_ids = []
 
-    merged_ids = list(dict.fromkeys(pending_ids + [str(value) for value in activity_ids]))
+    merged_ids = list(
+        dict.fromkeys(pending_ids + [str(value) for value in activity_ids])
+    )
     with open(STRAVA_PENDING_FILE, "w", encoding="utf-8") as f:
         f.write(json.dumps(merged_ids, separators=(",", ":")) + "\n")
 
