@@ -1,11 +1,16 @@
 name: CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [master]
+  pull_request:
 
 jobs:
   python_lint_and_test:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     strategy:
+      fail-fast: false
       max-parallel: 4
       matrix:
         python-version: ['3.12', '3.13', '3.14'] # Added Python 3.13 to the matrix
@@ -21,24 +26,22 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: 'pip'
-          cache-dependency-path: 'requirements-dev.txt'
+          cache-dependency-path: |
+            pyproject.toml
+            requirements-dev.txt
 
       - name: Install dependencies
         run: |
           pip install -r requirements-dev.txt
 
-      - name: Run GPX sync test
-        run: |
-          # make sure the gpx_sync.py script is executable
-          python run_page/gpx_sync.py
+      - name: Run Python tests
+        run: python -m pytest -q
 
       - name: Check formatting (black)
-        run: black . --target-version py313 --diff --color && black . --target-version py313 --check
+        run: black . --target-version py312 --diff --color && black . --target-version py312 --check
 
       - name: Lint with Ruff
-        run: |
-          pip install ruff
-          ruff check .
+        run: ruff check .
 
   node_lint_and_test:
     runs-on: ubuntu-latest
@@ -69,3 +72,5 @@ jobs:
           pnpm run check
           pnpm run lint
           pnpm run build
+        env:
+          VITE_MAPBOX_TOKEN: ${{ secrets.MAPBOX_TOKEN }}

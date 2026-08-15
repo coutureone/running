@@ -1,5 +1,5 @@
 
-FROM python:3.10.5-slim AS develop-py
+FROM python:3.12-slim AS develop-py
 WORKDIR /root/running_page
 COPY ./requirements.txt /root/running_page/requirements.txt
 RUN sed -i 's@http://archive.ubuntu.com/ubuntu/@https://mirrors.tuna.tsinghua.edu.cn/ubuntu/@g' /etc/apt/sources.list \
@@ -12,13 +12,13 @@ RUN sed -i 's@http://archive.ubuntu.com/ubuntu/@https://mirrors.tuna.tsinghua.ed
   && pip3 config set global.index-url https://mirrors.aliyun.com/pypi/simple/ \
   && pip3 install -r requirements.txt
 
-FROM node:18  AS develop-node
+FROM node:22 AS develop-node
 WORKDIR /root/running_page
 COPY ./package.json /root/running_page/package.json
 COPY ./pnpm-lock.yaml /root/running_page/pnpm-lock.yaml
 RUN npm config set registry https://registry.npmmirror.com \
   && corepack enable \
-  && COREPACK_NPM_REGISTRY=https://registry.npmmirror.com pnpm install
+  && COREPACK_NPM_REGISTRY=https://registry.npmmirror.com pnpm install --frozen-lockfile
 
 FROM develop-py AS data
 ARG app

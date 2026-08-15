@@ -48,9 +48,7 @@ def choose_upload_file(activity_id, preferred_type):
                 gpx = f.read()
         except OSError:
             gpx = ""
-        is_empty_treadmill_gpx = (
-            "treadmill_running" in gpx and "<trkpt" not in gpx
-        )
+        is_empty_treadmill_gpx = "treadmill_running" in gpx and "<trkpt" not in gpx
         if is_empty_treadmill_gpx and os.path.exists(fit_path):
             return fit_path, "fit"
         return gpx_path, "gpx"
@@ -59,6 +57,7 @@ def choose_upload_file(activity_id, preferred_type):
         return fit_path, "fit"
 
     return None, None
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -74,22 +73,29 @@ if __name__ == "__main__":
         action="store_true",
         help="if garmin account is cn",
     )
-    parser.add_argument(
+    file_type_group = parser.add_mutually_exclusive_group()
+    file_type_group.add_argument(
+        "--gpx",
+        dest="download_file_type",
+        action="store_const",
+        const="gpx",
+        help="download GPX files (not recommended for treadmill activities)",
+    )
+    file_type_group.add_argument(
         "--tcx",
         dest="download_file_type",
         action="store_const",
         const="tcx",
-        default="gpx",
-        help="to download personal documents or ebook",
+        help="download TCX files",
     )
-    parser.add_argument(
+    file_type_group.add_argument(
         "--fit",
         dest="download_file_type",
         action="store_const",
         const="fit",
-        default="gpx",
         help="download and upload FIT files, preferred for treadmill activities",
     )
+    parser.set_defaults(download_file_type="fit")
     options = parser.parse_args()
     strava_client = make_strava_client(
         options.strava_client_id,
