@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     strategy:
+      fail-fast: false
       max-parallel: 4
       matrix:
         python-version: ['3.12', '3.13', '3.14'] # Added Python 3.13 to the matrix
@@ -25,7 +26,9 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: 'pip'
-          cache-dependency-path: 'requirements-dev.txt'
+          cache-dependency-path: |
+            pyproject.toml
+            requirements-dev.txt
 
       - name: Install dependencies
         run: |
@@ -35,12 +38,10 @@ jobs:
         run: python -m pytest -q
 
       - name: Check formatting (black)
-        run: black . --target-version py313 --diff --color && black . --target-version py313 --check
+        run: black . --target-version py312 --diff --color && black . --target-version py312 --check
 
       - name: Lint with Ruff
-        run: |
-          pip install ruff
-          ruff check .
+        run: ruff check .
 
   node_lint_and_test:
     runs-on: ubuntu-latest
