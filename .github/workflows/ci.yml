@@ -1,10 +1,14 @@
 name: CI
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [master]
+  pull_request:
 
 jobs:
   python_lint_and_test:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     strategy:
       max-parallel: 4
       matrix:
@@ -27,10 +31,8 @@ jobs:
         run: |
           pip install -r requirements-dev.txt
 
-      - name: Run GPX sync test
-        run: |
-          # make sure the gpx_sync.py script is executable
-          python run_page/gpx_sync.py
+      - name: Run Python tests
+        run: python -m pytest -q
 
       - name: Check formatting (black)
         run: black . --target-version py313 --diff --color && black . --target-version py313 --check
