@@ -106,7 +106,27 @@ const RunMap = ({
   const switchLayerVisibility = useCallback(
     (map: MapInstance, nextLights: boolean) => {
       const styleJson = map.getStyle();
-      styleJson.layers.forEach((it: { id: string }) => {
+      const pageTheme = document.documentElement.getAttribute('data-theme');
+      // Tailwind exposes these colors as oklch(), which Mapbox GL does not
+      // currently accept. Use the equivalent neutral-100/900 hex values.
+      const pageBackgroundColor = pageTheme === 'light' ? '#f5f5f5' : '#171717';
+
+      styleJson.layers.forEach((it: { id: string; type?: string }) => {
+        // Without a visible background layer Mapbox clears the WebGL canvas to
+        // pure black, which creates a noticeable rectangle on the themed page.
+        // Keep the layer visible and match it to the resolved page background.
+        if (it.type === 'background') {
+          if (!nextLights && pageBackgroundColor) {
+            map.setPaintProperty(
+              it.id,
+              'background-color',
+              pageBackgroundColor
+            );
+          }
+          map.setLayoutProperty(it.id, 'visibility', 'visible');
+          return;
+        }
+
         if (!KEEP_WHEN_LIGHTS_OFF.includes(it.id)) {
           if (nextLights) map.setLayoutProperty(it.id, 'visibility', 'visible');
           else map.setLayoutProperty(it.id, 'visibility', 'none');
