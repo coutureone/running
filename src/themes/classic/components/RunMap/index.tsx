@@ -106,9 +106,10 @@ const RunMap = ({
   const switchLayerVisibility = useCallback(
     (map: MapInstance, nextLights: boolean) => {
       const styleJson = map.getStyle();
-      const pageBackgroundColor = getComputedStyle(
-        document.body
-      ).backgroundColor;
+      const pageTheme = document.documentElement.getAttribute('data-theme');
+      // Tailwind exposes these colors as oklch(), which Mapbox GL does not
+      // currently accept. Use the equivalent neutral-100/900 hex values.
+      const pageBackgroundColor = pageTheme === 'light' ? '#f5f5f5' : '#171717';
 
       styleJson.layers.forEach((it: { id: string; type?: string }) => {
         // Without a visible background layer Mapbox clears the WebGL canvas to
