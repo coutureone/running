@@ -1,3 +1,4 @@
+import MapboxLanguage from '@mapbox/mapbox-gl-language';
 import React, {
   useRef,
   useCallback,
@@ -12,11 +13,12 @@ import Map, {
   NavigationControl,
   MapRef,
   MapInstance,
-} from 'react-map-gl/maplibre';
+} from 'react-map-gl/mapbox';
 import useActivities from '../../hooks/useActivities';
 import {
   IS_CHINESE,
   ROAD_LABEL_DISPLAY,
+  MAPBOX_TOKEN,
   PROVINCE_FILL_COLOR,
   COUNTRY_FILL_COLOR,
   USE_DASH_LINE,
@@ -41,7 +43,7 @@ import RunMapButtons from './RunMapButtons';
 import styles from './style.module.css';
 import type { FeatureCollection } from 'geojson';
 import type { RPGeometry } from '../../static/run_countries';
-import 'maplibre-gl/dist/maplibre-gl.css';
+import 'mapbox-gl/dist/mapbox-gl.css';
 import LightsControl from './LightsControl';
 import { useMapTheme, useThemeChangeCounter } from '../../hooks/useTheme';
 
@@ -94,9 +96,11 @@ const RunMap = ({
     [currentMapTheme]
   );
 
+  const mapboxAccessToken = MAPBOX_TOKEN;
+
   /**
    * Toggle visibility of map layers based on lights setting
-   * @param map - The MapLibre map instance
+   * @param map - The Mapbox map instance
    * @param nextLights - Whether lights are on or off
    */
   const switchLayerVisibility = useCallback(
@@ -246,6 +250,9 @@ const RunMap = ({
     (ref: MapRef) => {
       if (ref !== null) {
         const map = ref.getMap();
+        if (map && IS_CHINESE) {
+          map.addControl(new MapboxLanguage({ defaultLanguage: 'zh-Hans' }));
+        }
         // all style resources have been downloaded
         // and the first visually complete rendering of the base style has occurred.
         // it's odd. when use style other than mapbox, the style.load event is not triggered.Add commentMore actions
@@ -444,6 +451,7 @@ const RunMap = ({
       mapStyle={mapStyle}
       ref={mapRefCallback}
       cooperativeGestures={isTouchDevice()}
+      mapboxAccessToken={mapboxAccessToken}
     >
       {mapError && (
         <div className={styles.mapErrorNotification}>
