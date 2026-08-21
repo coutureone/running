@@ -96,7 +96,6 @@ export default defineConfig({
   },
   build: {
     manifest: true,
-    modulePreload: false,
     outDir: './dist',
   },
 });
