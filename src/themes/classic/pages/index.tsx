@@ -1,4 +1,6 @@
 import {
+  lazy,
+  Suspense,
   useEffect,
   useState,
   useMemo,
@@ -10,14 +12,13 @@ import { Analytics } from '@vercel/analytics/react';
 import { Helmet } from 'react-helmet-async';
 import Layout from '../components/Layout';
 import LocationStat from '../components/LocationStat';
-import RunMap from '../components/RunMap';
 import RunTable from '../components/RunTable';
 import SVGStat from '../components/SVGStat';
 import YearsStat from '../components/YearsStat';
 import useActivities from '../hooks/useActivities';
 import getSiteMetadata from '@core/hooks/useSiteMetadata';
 import { useInterval } from '@core/hooks/useInterval';
-import { IS_CHINESE } from '../utils/const';
+import { IS_CHINESE, MAP_HEIGHT } from '../utils/const';
 import {
   Activity,
   filterAndSortRuns,
@@ -37,6 +38,17 @@ import {
 import { useTheme, useThemeChangeCounter } from '../hooks/useTheme';
 
 const HASH_RUN_CHANGE_EVENT = 'running-page-hash-run-change';
+const RunMap = lazy(() => import('../components/RunMap'));
+
+const MapLoadingFallback = () => (
+  <div
+    aria-label="Loading map"
+    className="flex w-full items-center justify-center"
+    style={{ height: MAP_HEIGHT, color: 'var(--color-run-date)' }}
+  >
+    Loading map...
+  </div>
+);
 
 const getRunIdFromHash = () => {
   if (typeof window === 'undefined') return null;
@@ -425,15 +437,17 @@ const Index = () => {
         )}
       </div>
       <div className="w-full lg:w-2/3" id="map-container">
-        <RunMap
-          title={title}
-          viewState={viewState}
-          geoData={animatedGeoData}
-          setViewState={setViewState}
-          changeYear={changeYear}
-          thisYear={year}
-          animationTrigger={animationTrigger}
-        />
+        <Suspense fallback={<MapLoadingFallback />}>
+          <RunMap
+            title={title}
+            viewState={viewState}
+            geoData={animatedGeoData}
+            setViewState={setViewState}
+            changeYear={changeYear}
+            thisYear={year}
+            animationTrigger={animationTrigger}
+          />
+        </Suspense>
         {year === 'Total' ? (
           <SVGStat />
         ) : (
