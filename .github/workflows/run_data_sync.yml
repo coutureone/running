@@ -53,6 +53,7 @@ jobs:
       DATA_CACHE_PREFIX: ${{ steps.set_output.outputs.DATA_CACHE_PREFIX }}
       BUILD_GH_PAGES: ${{ steps.set_output.outputs.BUILD_GH_PAGES }}
       SAVE_TO_PARQENT: ${{ env.SAVE_TO_PARQENT }}
+      GARMIN_CN_GLOBAL_RESULT: ${{ steps.garmin_cn_global_sync.outcome }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -175,13 +176,6 @@ jobs:
         # make garmin secret string 'python run_page/garmin_sync_cn_global.py ${email} ${password} --is-cn'
         # If you only want to sync 'type running' add args --only-run, default script is to sync all data (rides and runs).
         # python run_page/garmin_sync_cn_global.py ${{ secrets.GARMIN_SECRET_STRING_CN }} ${{ secrets.GARMIN_SECRET_STRING }}  --only-run
-
-      - name: Notify Garmin sync failure via Bark
-        if: steps.garmin_cn_global_sync.outcome == 'failure'
-        run: |
-          curl -s --max-time 10 \
-            "https://api.day.app/${{ secrets.BARK_KEY }}/Garmin%20%E5%90%8C%E6%AD%A5%E5%A4%B1%E8%B4%A5/%E4%BB%8A%E5%A4%A9%E7%9A%84%20Garmin%20CN%20%E2%86%92%20Global%20%E5%90%8C%E6%AD%A5%E5%A4%B1%E8%B4%A5%EF%BC%8C%E8%AF%B7%E6%A3%80%E6%9F%A5%20GARMIN_SECRET_STRING%20%E6%98%AF%E5%90%A6%E9%9C%80%E8%A6%81%E6%9B%B4%E6%96%B0?group=Running&sound=alarm" \
-            || echo 'Bark notification failed (non-critical)'
 
       - name: Run sync Only GPX script
         if: env.RUN_TYPE == 'only_gpx'
@@ -317,3 +311,61 @@ jobs:
       data_cache_prefix: ${{needs.sync.outputs.DATA_CACHE_PREFIX}}
     needs:
       - sync
+
+  notify:
+    if: always()
+    name: Notify result via Bark
+    runs-on: ubuntu-latest
+    needs:
+      - sync
+      - publish_github_pages
+    steps:
+      - name: Send Bark notification
+        env:
+          BARK_KEY: ${{ secrets.BARK_KEY }}
+          SYNC_RESULT: ${{ needs.sync.result }}
+          PUBLISH_RESULT: ${{ needs.publish_github_pages.result }}
+          GARMIN_RESULT: ${{ needs.sync.outputs.GARMIN_CN_GLOBAL_RESULT }}
+          EVENT_NAME: ${{ github.event_name }}
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ -z "$BARK_KEY" ]; then
+            echo '::warning::BARK_KEY is not configured; skipping Bark notification'
+            exit 0
+          fi
+
+          status='success'
+          title='Running 同步成功'
+          sound='birdsong'
+          if [ "$SYNC_RESULT" != 'success' ] || \
+             { [ "$PUBLISH_RESULT" != 'success' ] && [ "$PUBLISH_RESULT" != 'skipped' ]; } || \
+             [ "$GARMIN_RESULT" = 'failure' ]; then
+            status='failure'
+            title='Running 同步失败'
+            sound='alarm'
+          fi
+
+          body="状态: $status
+          数据同步: $SYNC_RESULT
+          Garmin CN → Global: ${GARMIN_RESULT:-skipped}
+          网页发布: $PUBLISH_RESULT
+          触发方式: $EVENT_NAME
+          同步类型: $RUN_TYPE
+          点击查看 GitHub Actions 详情"
+
+          jq -n \
+            --arg key "$BARK_KEY" \
+            --arg title "$title" \
+            --arg body "$body" \
+            --arg sound "$sound" \
+            --arg url "$RUN_URL" \
+            '{device_key: $key, title: $title, body: $body, group: "Running", sound: $sound, url: $url}' \
+            | curl --fail-with-body --silent --show-error --max-time 10 \
+                -H 'Content-Type: application/json; charset=utf-8' \
+                --data-binary @- https://api.day.app/push \
+            || echo '::warning::Bark notification failed (non-critical)'
+
+          if [ "$GARMIN_RESULT" = 'failure' ] && [ "$SYNC_RESULT" = 'success' ]; then
+            echo '::error::Garmin CN to Global synchronization failed'
+            exit 1
+          fi
