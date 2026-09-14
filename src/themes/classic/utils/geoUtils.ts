@@ -92,20 +92,33 @@ export const geoJsonForRuns = (
   runs: Activity[]
 ): FeatureCollection<LineString> => ({
   type: 'FeatureCollection',
-  features: runs.map((run) => {
+  // GeoJSON LineString features must contain at least two valid positions.
+  // Skip missing or unusable routes without removing activities from statistics.
+  features: runs.flatMap((run) => {
     const points = pathForRun(run);
-    const color = colorForRun(run);
-    return {
-      type: 'Feature',
-      properties: {
-        color: color,
-        indoor: run.subtype === 'indoor' || run.subtype === 'treadmill',
+    if (
+      points.length < 2 ||
+      points.some(
+        ([longitude, latitude]) =>
+          !Number.isFinite(longitude) || !Number.isFinite(latitude)
+      )
+    ) {
+      return [];
+    }
+
+    return [
+      {
+        type: 'Feature',
+        properties: {
+          color: colorForRun(run),
+          indoor: run.subtype === 'indoor' || run.subtype === 'treadmill',
+        },
+        geometry: {
+          type: 'LineString',
+          coordinates: points,
+        },
       },
-      geometry: {
-        type: 'LineString',
-        coordinates: points,
-      },
-    };
+    ];
   }),
 });
 
