@@ -21,10 +21,10 @@ export function Header({ dark, toggleTheme, page, onNavigate }: HeaderProps) {
 
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--color-border)] bg-[var(--color-bg)]/70 backdrop-blur-md">
-      <div className="mx-auto flex max-w-[1920px] items-center justify-between px-4 py-4 sm:px-6 lg:px-8 lg:py-6">
+      <div className="mx-auto flex max-w-[1400px] items-center justify-between px-4 py-3 min-[1800px]:max-w-[1920px] min-[1800px]:px-8 min-[1800px]:py-6 sm:px-6">
         {/* Logo */}
         <div className="flex items-center gap-2">
-          <span className="text-base font-bold tracking-tight whitespace-nowrap text-[var(--color-text)] sm:text-2xl lg:text-3xl">
+          <span className="text-base font-bold tracking-tight whitespace-nowrap text-[var(--color-text)] min-[1800px]:text-3xl sm:text-xl">
             Couture&apos;s Running
           </span>
         </div>

@@ -65,7 +65,7 @@ function Dashboard() {
           onBack={() => setPage('home')}
         />
       ) : (
-        <main className="mx-auto max-w-[1920px] space-y-8 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+        <main className="dashboard-main mx-auto max-w-[1400px] px-4 py-6 min-[1800px]:max-w-[1920px] min-[1800px]:px-8 min-[1800px]:py-8 sm:px-6">
           <StatsCards
             activities={filtered}
             allActivities={activities}
@@ -80,45 +80,43 @@ function Dashboard() {
             onSelectActivity={setSelectedActivity}
           />
 
-          <div className="grid grid-cols-1 items-start gap-6 xl:grid-cols-[minmax(0,1.8fr)_minmax(360px,0.8fr)]">
-            <div className="min-w-0">
-              <ActivityLog
-                activities={filtered}
-                years={years}
-                year={year}
-                setYear={setYear}
-                selectedActivity={selectedActivity}
-                onSelectActivity={setSelectedActivity}
-                filter={filter}
-              />
-            </div>
+          <div className="dashboard-log min-w-0">
+            <ActivityLog
+              activities={filtered}
+              years={years}
+              year={year}
+              setYear={setYear}
+              selectedActivity={selectedActivity}
+              onSelectActivity={setSelectedActivity}
+              filter={filter}
+            />
+          </div>
 
-            <div className="flex min-w-0 flex-col gap-6 overflow-hidden">
-              <ProfileCard activities={activities} filter={filter} />
-              <ChinaMap
-                activities={filtered}
-                filter={filter}
-                selectedProvince={selectedProvince}
-                onSelectProvince={(p) => {
-                  setSelectedProvince(p);
-                  setSelectedActivity(null);
-                }}
-              />
-              <RouteMap
-                activities={provinceFiltered}
-                selectedActivity={selectedActivity}
-                dark={dark}
-                onClearSelection={() => setSelectedActivity(null)}
-              />
-              <PersonalBest
-                activities={activities}
-                onSelectActivity={setSelectedActivity}
-              />
-              <CalendarWidget
-                activities={filtered}
-                onSelectActivity={setSelectedActivity}
-              />
-            </div>
+          <div className="dashboard-side flex min-w-0 flex-col gap-6 overflow-hidden">
+            <ProfileCard activities={activities} filter={filter} />
+            <ChinaMap
+              activities={filtered}
+              filter={filter}
+              selectedProvince={selectedProvince}
+              onSelectProvince={(p) => {
+                setSelectedProvince(p);
+                setSelectedActivity(null);
+              }}
+            />
+            <RouteMap
+              activities={provinceFiltered}
+              selectedActivity={selectedActivity}
+              dark={dark}
+              onClearSelection={() => setSelectedActivity(null)}
+            />
+            <PersonalBest
+              activities={activities}
+              onSelectActivity={setSelectedActivity}
+            />
+            <CalendarWidget
+              activities={filtered}
+              onSelectActivity={setSelectedActivity}
+            />
           </div>
         </main>
       )}
