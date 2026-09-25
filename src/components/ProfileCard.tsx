@@ -6,6 +6,7 @@ import {
   extractProvince,
 } from '../hooks/useActivities';
 import { AVATAR } from '../config';
+import { getActivityDisplayName } from '../core/activityName';
 
 interface ProfileCardProps {
   activities: Activity[];
@@ -230,7 +231,7 @@ export function ProfileCard({ activities, filter = 'all' }: ProfileCardProps) {
           </p>
           <p className="text-sm font-medium">
             {latest.type === 'Run' ? '🏃 ' : '🚴 '}
-            {latest.name || (latest.type === 'Run' ? 'Run' : 'Ride')}
+            {getActivityDisplayName(latest)}
             <span className="font-normal text-[var(--color-muted)]">
               {' '}
               · {formatDistance(latest.distance)} km ·{' '}

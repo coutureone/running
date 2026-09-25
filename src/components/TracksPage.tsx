@@ -12,6 +12,7 @@ import {
 } from '../hooks/useActivities';
 import { useLocale } from '../hooks/useLocale';
 import { MAPBOX_TOKEN } from '../config';
+import { getActivityDisplayName } from '../core/activityName';
 
 type SportType = 'Run';
 
@@ -69,7 +70,7 @@ function TrackThumb({
     <div
       className={`group relative cursor-pointer rounded transition-all ${selected ? 'ring-2 ring-[var(--color-accent)] ring-offset-1 ring-offset-[var(--color-bg)]' : ''}`}
       onClick={onClick}
-      title={`${activity.name} — ${(activity.distance / 1000).toFixed(1)} km`}
+      title={`${getActivityDisplayName(activity)} — ${(activity.distance / 1000).toFixed(1)} km`}
     >
       <svg
         width={size}
@@ -488,7 +489,7 @@ export function TracksPage({
                 </button>
               </div>
               <p className="mb-0.5 truncate text-xs font-semibold">
-                {selectedActivity.name}
+                {getActivityDisplayName(selectedActivity)}
               </p>
               <p className="mb-2 text-[10px] text-[var(--color-muted)]">
                 {new Date(selectedActivity.start_date_local).toLocaleDateString(
