@@ -56,6 +56,10 @@
   grid-area: side;
 }
 
+.dashboard-heatmap .heatmap-year-row {
+  max-width: 812px;
+}
+
 @media (max-width: 1799px) {
   .dashboard-stats {
     gap: 1rem;
