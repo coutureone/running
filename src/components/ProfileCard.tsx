@@ -26,11 +26,17 @@ export function ProfileCard({ activities, filter = 'all' }: ProfileCardProps) {
     0
   );
 
-  const allDates = activities.map((a) =>
-    new Date(a.start_date_local).getFullYear()
-  );
+  const activityDates = activities
+    .map((a) => a.start_date_local.slice(0, 10))
+    .sort();
+  const firstActivityDate = activityDates[0];
+  const lastActivityDate = activityDates.at(-1);
   const yearsActive =
-    allDates.length > 0 ? Math.max(...allDates) - Math.min(...allDates) + 1 : 0;
+    firstActivityDate && lastActivityDate
+      ? Number(lastActivityDate.slice(0, 4)) -
+        Number(firstActivityDate.slice(0, 4)) -
+        (lastActivityDate.slice(5) < firstActivityDate.slice(5) ? 1 : 0)
+      : 0;
 
   // Countries and provinces — use shared extractProvince for consistency with ChinaMap
   const countries = new Set<string>();
