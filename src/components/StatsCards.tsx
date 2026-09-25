@@ -292,10 +292,10 @@ export function StatsCards({
   const unit = filter === 'Run' ? t('runs') : t('activities');
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-[1fr_1fr_1fr_1.6fr]">
+    <div className="dashboard-stats grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
       {/* Yearly Goal */}
       <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-5 transition-all duration-300 hover:border-[var(--color-accent)]/30 hover:bg-[var(--color-accent)]/5 hover:shadow-[var(--color-accent)]/5 hover:shadow-lg">
-        <p className="mb-2 flex items-center gap-1.5 text-xs tracking-wider text-[var(--color-muted)] uppercase">
+        <p className="mb-4 flex items-center gap-1.5 text-sm tracking-wider text-[var(--color-muted)] uppercase">
           <svg
             className="h-3.5 w-3.5"
             fill="none"
@@ -311,7 +311,7 @@ export function StatsCards({
           </svg>
           {t('yearlyGoal')}
         </p>
-        <p className="font-mono text-3xl font-bold whitespace-nowrap">
+        <p className="font-mono text-4xl font-bold whitespace-nowrap md:text-5xl">
           {goal.unit === 'time'
             ? formatHours(yearSeconds)
             : formatDistance(yearDistance)}
@@ -322,7 +322,7 @@ export function StatsCards({
               : `${goal.yearly} km`}
           </span>
         </p>
-        <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-[var(--color-border)]">
+        <div className="mt-5 h-2 overflow-hidden rounded-full bg-[var(--color-border)]">
           <div
             className="h-full rounded-full bg-[var(--color-accent)] transition-all"
             style={{
@@ -330,7 +330,7 @@ export function StatsCards({
             }}
           />
         </div>
-        <div className="mt-3 flex items-center justify-between text-sm text-[var(--color-muted)]">
+        <div className="mt-5 flex items-center justify-between text-base text-[var(--color-muted)]">
           <span className="flex items-center gap-1.5">
             <svg
               className="h-3.5 w-3.5 text-[var(--color-accent)]"
@@ -350,7 +350,7 @@ export function StatsCards({
           <span>{formatHours(yearSeconds)}</span>
         </div>
         <p
-          className={`mt-1.5 text-xs ${yearDiff >= 0 ? 'text-emerald-500' : 'text-red-400'}`}
+          className={`mt-2 text-sm ${yearDiff >= 0 ? 'text-emerald-500' : 'text-red-400'}`}
         >
           {yearDiff >= 0 ? '↗' : '↘'}{' '}
           {goal.unit === 'time'
@@ -362,7 +362,7 @@ export function StatsCards({
 
       {/* Monthly Goal */}
       <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-5 transition-all duration-300 hover:border-[var(--color-accent)]/30 hover:bg-[var(--color-accent)]/5 hover:shadow-[var(--color-accent)]/5 hover:shadow-lg">
-        <p className="mb-2 flex items-center gap-1.5 text-xs tracking-wider text-[var(--color-muted)] uppercase">
+        <p className="mb-4 flex items-center gap-1.5 text-sm tracking-wider text-[var(--color-muted)] uppercase">
           <svg
             className="h-3.5 w-3.5"
             fill="none"
@@ -378,7 +378,7 @@ export function StatsCards({
           </svg>
           {t('monthlyGoal')}
         </p>
-        <p className="font-mono text-3xl font-bold whitespace-nowrap">
+        <p className="font-mono text-4xl font-bold whitespace-nowrap md:text-5xl">
           {goal.unit === 'time'
             ? formatHours(monthSeconds)
             : formatDistance(monthDistance)}
@@ -389,7 +389,7 @@ export function StatsCards({
               : `${goal.monthly} km`}
           </span>
         </p>
-        <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-[var(--color-border)]">
+        <div className="mt-5 h-2 overflow-hidden rounded-full bg-[var(--color-border)]">
           <div
             className="h-full rounded-full bg-[var(--color-accent)] transition-all"
             style={{
@@ -397,7 +397,7 @@ export function StatsCards({
             }}
           />
         </div>
-        <div className="mt-3 flex items-center justify-between text-sm text-[var(--color-muted)]">
+        <div className="mt-5 flex items-center justify-between text-base text-[var(--color-muted)]">
           <span className="flex items-center gap-1.5">
             <svg
               className="h-3.5 w-3.5 text-[var(--color-accent)]"
@@ -417,7 +417,7 @@ export function StatsCards({
           <span>{formatHours(monthSeconds)}</span>
         </div>
         <p
-          className={`mt-1.5 text-xs ${monthDiff >= 0 ? 'text-emerald-500' : 'text-red-400'}`}
+          className={`mt-2 text-sm ${monthDiff >= 0 ? 'text-emerald-500' : 'text-red-400'}`}
         >
           {monthDiff >= 0 ? '↗' : '↘'}{' '}
           {goal.unit === 'time'
@@ -429,7 +429,7 @@ export function StatsCards({
 
       {/* Weekly Goal */}
       <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-5 transition-all duration-300 hover:border-[var(--color-accent)]/30 hover:bg-[var(--color-accent)]/5 hover:shadow-[var(--color-accent)]/5 hover:shadow-lg">
-        <p className="mb-2 flex items-center gap-1.5 text-xs tracking-wider text-[var(--color-muted)] uppercase">
+        <p className="mb-4 flex items-center gap-1.5 text-sm tracking-wider text-[var(--color-muted)] uppercase">
           <svg
             className="h-3.5 w-3.5"
             fill="none"
@@ -445,7 +445,7 @@ export function StatsCards({
           </svg>
           {locale === 'zh' ? '周目标' : 'WEEKLY GOAL'}
         </p>
-        <p className="font-mono text-3xl font-bold whitespace-nowrap">
+        <p className="font-mono text-4xl font-bold whitespace-nowrap md:text-5xl">
           {goal.unit === 'time'
             ? formatHours(weekSeconds)
             : formatDistance(weekDistance)}
@@ -453,7 +453,7 @@ export function StatsCards({
             / {goal.unit === 'time' ? `${weekGoalMins}m` : `${goal.weekly} km`}
           </span>
         </p>
-        <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-[var(--color-border)]">
+        <div className="mt-5 h-2 overflow-hidden rounded-full bg-[var(--color-border)]">
           <div
             className="h-full rounded-full bg-[var(--color-accent)] transition-all"
             style={{
@@ -461,7 +461,7 @@ export function StatsCards({
             }}
           />
         </div>
-        <div className="mt-3 flex items-center justify-between text-sm text-[var(--color-muted)]">
+        <div className="mt-5 flex items-center justify-between text-base text-[var(--color-muted)]">
           <span className="flex items-center gap-1.5">
             <svg
               className="h-3.5 w-3.5 text-[var(--color-accent)]"
@@ -481,7 +481,7 @@ export function StatsCards({
           <span>{formatHours(weekSeconds)}</span>
         </div>
         <p
-          className={`mt-1.5 text-xs ${weekDiff >= 0 ? 'text-emerald-500' : 'text-red-400'}`}
+          className={`mt-2 text-sm ${weekDiff >= 0 ? 'text-emerald-500' : 'text-red-400'}`}
         >
           {weekDiff >= 0 ? '↗' : '↘'}{' '}
           {goal.unit === 'time'
@@ -493,7 +493,7 @@ export function StatsCards({
 
       {/* Streak */}
       <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-5 transition-all duration-300 hover:border-[var(--color-accent)]/30 hover:bg-[var(--color-accent)]/5 hover:shadow-[var(--color-accent)]/5 hover:shadow-lg">
-        <p className="mb-2 flex items-center gap-1.5 text-xs tracking-wider text-[var(--color-muted)] uppercase">
+        <p className="mb-4 flex items-center gap-1.5 text-sm tracking-wider text-[var(--color-muted)] uppercase">
           <svg
             className="h-3.5 w-3.5"
             fill="none"
@@ -515,7 +515,7 @@ export function StatsCards({
           {t('streak')}
         </p>
         <div className="flex items-baseline gap-3">
-          <p className="font-mono text-3xl font-bold">
+          <p className="font-mono text-4xl font-bold md:text-5xl">
             {currentStreak}
             <span className="ml-1 text-base font-normal text-[var(--color-muted)]">
               {t('days')}
@@ -536,7 +536,7 @@ export function StatsCards({
             if (acts.length === 0) return '';
             const sorted = [...acts].sort((a, b) => b.distance - a.distance);
             const type = sorted[0].type;
-            if (type === 'Run') return '#f97316';
+            if (type === 'Run' || type === 'VirtualRun') return '#f97316';
             return 'var(--color-text)';
           }
 

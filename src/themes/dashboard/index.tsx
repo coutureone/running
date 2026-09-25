@@ -45,7 +45,10 @@ function Dashboard() {
   }, [filtered, selectedProvince]);
 
   return (
-    <div className="min-h-screen bg-[var(--color-bg)]" data-filter={filter}>
+    <div
+      className="dashboard min-h-screen bg-[var(--color-bg)]"
+      data-filter={filter}
+    >
       <Header
         dark={dark}
         toggleTheme={toggle}
@@ -62,23 +65,23 @@ function Dashboard() {
           onBack={() => setPage('home')}
         />
       ) : (
-        <main className="mx-auto max-w-[1400px] px-6 py-6">
-          <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[1fr_360px] xl:grid-cols-[1fr_380px]">
-            {/* Left column */}
-            <div className="min-w-0 space-y-6 overflow-hidden">
-              <StatsCards
-                activities={filtered}
-                allActivities={activities}
-                year={year}
-                filter={filter}
-                onSelectActivity={setSelectedActivity}
-              />
-              <ContributionHeatmap
-                activities={filtered}
-                year={heatmapYear}
-                filter={filter}
-                onSelectActivity={setSelectedActivity}
-              />
+        <main className="mx-auto max-w-[1920px] space-y-8 px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+          <StatsCards
+            activities={filtered}
+            allActivities={activities}
+            year={year}
+            filter={filter}
+            onSelectActivity={setSelectedActivity}
+          />
+          <ContributionHeatmap
+            activities={filtered}
+            year={heatmapYear}
+            filter={filter}
+            onSelectActivity={setSelectedActivity}
+          />
+
+          <div className="grid grid-cols-1 items-start gap-6 xl:grid-cols-[minmax(0,1.8fr)_minmax(360px,0.8fr)]">
+            <div className="min-w-0">
               <ActivityLog
                 activities={filtered}
                 years={years}
@@ -90,7 +93,6 @@ function Dashboard() {
               />
             </div>
 
-            {/* Right column */}
             <div className="flex min-w-0 flex-col gap-6 overflow-hidden">
               <ProfileCard activities={activities} filter={filter} />
               <ChinaMap

@@ -24,7 +24,7 @@ interface AppConfig {
 
 const config = rawConfig as unknown as AppConfig;
 
-export const DEFAULT_LOCALE: Locale = config.locale ?? 'zh';
+export const DEFAULT_LOCALE: Locale = config.locale ?? 'en';
 export const DEFAULT_THEME: 'light' | 'dark' | 'system' =
   config.theme ?? 'system';
 export const THEME_PRESET: string = config.theme_preset ?? 'default';
