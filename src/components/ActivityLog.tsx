@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import type { Activity, SportFilter } from '../types';
 import { formatDuration, formatPace } from '../hooks/useActivities';
 import { useLocale } from '../hooks/useLocale';
+import { getActivityDisplayName } from '../core/activityName';
 
 interface ActivityLogProps {
   activities: Activity[];
@@ -170,7 +171,7 @@ export function ActivityLog({
                     {typeIcon(a.type)} {a.type}
                   </span>
                 </td>
-                <td className="py-3">{a.name || t('run')}</td>
+                <td className="py-3">{getActivityDisplayName(a)}</td>
                 <td className="py-3 font-mono font-medium">
                   {(a.distance / 1000).toFixed(1)}
                   <span className="ml-1 text-xs font-normal text-[var(--color-muted)]">
