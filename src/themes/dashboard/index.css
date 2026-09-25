@@ -3,29 +3,54 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-bg: #f6f8fa;
+  --color-bg: #f5f6f1;
   --color-card: #ffffff;
-  --color-border: #d0d7de;
-  --color-text: #1f2328;
-  --color-muted: #656d76;
+  --color-border: #d8dbd3;
+  --color-text: #20241b;
+  --color-muted: #62695d;
   --color-run: #f97316;
-  --color-all: #a855f7;
-  --color-accent: #a855f7;
+  --color-all: #709900;
+  --color-accent: #709900;
+  --color-on-accent: #1d2600;
 }
 
 .dark {
-  --color-bg: #0d1117;
-  --color-card: #161b22;
-  --color-border: #30363d;
-  --color-text: #e6edf3;
-  --color-muted: #8b949e;
+  --color-bg: #1b1b1a;
+  --color-card: #252525;
+  --color-border: #3b3b39;
+  --color-text: #f5f5f2;
+  --color-muted: #a4a4a0;
+  --color-accent: #caff1a;
 }
 
 [data-filter='all'] {
-  --color-accent: #a855f7;
+  --color-accent: #709900;
+}
+.dark [data-filter='all'] {
+  --color-accent: #caff1a;
 }
 [data-filter='Run'] {
   --color-accent: #f97316;
+}
+
+@media (min-width: 768px) {
+  .dashboard-stats > div {
+    min-height: 250px;
+    padding: clamp(1.5rem, 2vw, 2rem);
+  }
+}
+
+.dashboard-stats > :first-child {
+  border-color: color-mix(
+    in srgb,
+    var(--color-accent) 38%,
+    var(--color-border)
+  );
+  background-color: color-mix(
+    in srgb,
+    var(--color-accent) 4%,
+    var(--color-card)
+  );
 }
 
 body {

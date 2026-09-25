@@ -21,22 +21,22 @@ export function Header({ dark, toggleTheme, page, onNavigate }: HeaderProps) {
 
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--color-border)] bg-[var(--color-bg)]/70 backdrop-blur-md">
-      <div className="mx-auto flex max-w-[1400px] items-center justify-between px-6 py-4">
+      <div className="mx-auto flex max-w-[1920px] items-center justify-between px-4 py-4 sm:px-6 lg:px-8 lg:py-6">
         {/* Logo */}
         <div className="flex items-center gap-2">
-          <span className="text-xl font-bold text-[var(--color-text)]">
-            RUNNING<span className="text-[var(--color-run)]">.</span>PAGE
+          <span className="text-base font-bold tracking-tight whitespace-nowrap text-[var(--color-text)] sm:text-2xl lg:text-3xl">
+            Couture&apos;s Running
           </span>
         </div>
 
         {/* Right nav */}
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-2 sm:gap-6">
           {navItems.map((item) => (
             <button
               type="button"
               key={item.page}
               onClick={() => onNavigate(item.page)}
-              className={`cursor-pointer border-0 bg-transparent p-0 text-sm transition-colors ${
+              className={`cursor-pointer border-0 bg-transparent p-0 text-xs transition-colors sm:text-sm ${
                 item.page === page
                   ? 'font-medium text-[var(--color-accent)]'
                   : 'text-[var(--color-muted)] hover:text-[var(--color-text)]'
@@ -90,7 +90,7 @@ export function Header({ dark, toggleTheme, page, onNavigate }: HeaderProps) {
             href="https://github.com/yihong0618/running_page"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-[var(--color-muted)] transition-colors hover:bg-[var(--color-card)] hover:text-[var(--color-text)]"
+            className="hidden h-8 w-8 items-center justify-center rounded-lg text-[var(--color-muted)] transition-colors hover:bg-[var(--color-card)] hover:text-[var(--color-text)] sm:flex"
             title="GitHub"
           >
             <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">

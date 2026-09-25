@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, useCallback } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+} from 'react';
 import type { ReactNode } from 'react';
 import { messages, type Locale } from '../i18n';
 import { DEFAULT_LOCALE } from '../config';
@@ -10,7 +16,7 @@ interface LocaleContextValue {
 }
 
 const LocaleContext = createContext<LocaleContextValue>({
-  locale: 'zh',
+  locale: 'en',
   setLocale: () => {},
   t: (key) => key,
 });
@@ -18,8 +24,12 @@ const LocaleContext = createContext<LocaleContextValue>({
 export function LocaleProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>(() => {
     const stored = localStorage.getItem('locale');
-    return (stored as Locale) || DEFAULT_LOCALE;
+    return stored === 'en' || stored === 'zh' ? stored : DEFAULT_LOCALE;
   });
+
+  useEffect(() => {
+    document.documentElement.lang = locale === 'zh' ? 'zh-CN' : 'en';
+  }, [locale]);
 
   const setLocale = useCallback((l: Locale) => {
     setLocaleState(l);

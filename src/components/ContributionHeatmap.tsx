@@ -20,7 +20,7 @@ interface HeatmapProps {
 
 // Map any activity type to the 4 display categories
 function toDisplayType(type: string): 'Run' | 'Ride' | 'Hike' | 'Training' {
-  if (type === 'Run') return 'Run';
+  if (type === 'Run' || type === 'VirtualRun') return 'Run';
   if (type === 'Ride') return 'Ride';
   if (type === 'Hike') return 'Hike';
   return 'Training';
@@ -38,7 +38,7 @@ function getColor(distance: number, max: number, filter: SportFilter): string {
   if (distance === 0) return 'var(--color-border)';
   const level = Math.ceil(Math.min(distance / max, 1) * 4);
   const colors: Record<string, string[]> = {
-    all: ['#e9d5ff', '#c084fc', '#a855f7', '#7c3aed'],
+    all: TYPE_PALETTES.Run,
     Run: TYPE_PALETTES.Run,
     Ride: TYPE_PALETTES.Ride,
     Hike: TYPE_PALETTES.Hike,
@@ -353,7 +353,7 @@ export function ContributionHeatmap({
   return (
     <div
       ref={captureRef}
-      className="overflow-x-auto rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-5"
+      className="overflow-x-auto rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-5 md:p-8"
     >
       <style>{`
         @keyframes fadeSlideIn {
@@ -382,14 +382,14 @@ export function ContributionHeatmap({
 
       {/* Header */}
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-semibold">{heatmapTitle}</h2>
+        <h2 className="text-lg font-semibold md:text-2xl">{heatmapTitle}</h2>
         <div className="flex items-center gap-1.5">
           {/* ALL button */}
           <button
             onClick={() => handleSelectYear('all')}
             className={`rounded px-2.5 py-1 text-xs font-medium transition-all ${
               selectedYear === 'all'
-                ? 'bg-[var(--color-accent)] text-white'
+                ? 'bg-[var(--color-accent)] text-[var(--color-on-accent)]'
                 : 'text-[var(--color-muted)] hover:text-[var(--color-text)]'
             }`}
           >
@@ -426,7 +426,7 @@ export function ContributionHeatmap({
               onClick={() => handleSelectYear(y)}
               className={`rounded px-2.5 py-1 text-xs font-medium transition-all ${
                 selectedYear === y
-                  ? 'bg-[var(--color-accent)] text-white'
+                  ? 'bg-[var(--color-accent)] text-[var(--color-on-accent)]'
                   : 'text-[var(--color-muted)] hover:text-[var(--color-text)]'
               }`}
             >
@@ -508,7 +508,7 @@ export function ContributionHeatmap({
         {yearData.map(({ year: yr, grid, max, monthPositions, stats }, idx) => (
           <div
             key={yr}
-            className="heatmap-year-row"
+            className="heatmap-year-row min-w-[820px]"
             style={{ animationDelay: `${idx * 60}ms` }}
           >
             {/* Year label when showing all */}
@@ -523,17 +523,17 @@ export function ContributionHeatmap({
                 </span>
               </div>
             )}
-            <div className="ml-5 flex">
+            <div className="ml-6 flex">
               {monthPositions.map((m, i) => {
                 const nextStart = monthPositions[i + 1]?.weekIdx ?? grid.length;
                 const span = nextStart - m.weekIdx;
                 return (
                   <div
                     key={i}
-                    className="text-xs text-[var(--color-muted)]"
+                    className="min-w-0 text-xs text-[var(--color-muted)] md:text-sm"
                     style={{
-                      width: `${span * 14}px`,
-                      minWidth: `${span * 14}px`,
+                      flexGrow: span,
+                      flexBasis: 0,
                     }}
                   >
                     {locale === 'zh'
@@ -556,49 +556,56 @@ export function ContributionHeatmap({
                 );
               })}
             </div>
-            <div className="mt-1 flex gap-[3px]">
-              <div className="mr-1 flex flex-col gap-[3px]">
+            <div className="mt-2 flex gap-1">
+              <div className="mr-1 flex w-4 shrink-0 flex-col gap-1">
                 {dayLabels.map((d, i) => (
                   <div
                     key={i}
-                    className="flex h-3 w-3 items-center justify-center text-[10px] text-[var(--color-muted)]"
+                    className="flex flex-1 items-center justify-center text-[10px] text-[var(--color-muted)]"
                   >
                     {d}
                   </div>
                 ))}
               </div>
-              {grid.map((week, wi) => (
-                <div key={wi} className="flex flex-col gap-[3px]">
-                  {week.map((day, di) => {
-                    const bgColor =
-                      day.distance === 0
-                        ? 'var(--color-border)'
-                        : isAll
-                          ? getColorAll(day.typeRatio, day.domType)
-                          : getColor(day.distance, max, filter);
-                    const titleText =
-                      day.activities.length === 0
-                        ? day.date
-                        : isGym
-                          ? `${day.date}: ${day.distance} session(s)`
-                          : day.domType === 'Training'
-                            ? `${day.date}: ${Math.round(day.timeSecs / 60)}min`
-                            : `${day.date}: ${(day.activities.reduce((s, a) => s + a.distance, 0) / 1000).toFixed(1)} km`;
-                    return (
-                      <div
-                        key={di}
-                        className="h-3 w-3 cursor-pointer rounded-sm transition-colors hover:ring-1 hover:ring-[var(--color-muted)]"
-                        style={{ backgroundColor: bgColor }}
-                        title={titleText}
-                        onClick={() => {
-                          if (day.activities.length > 0)
-                            onSelectActivity?.(day.activities[0]);
-                        }}
-                      />
-                    );
-                  })}
-                </div>
-              ))}
+              <div
+                className="grid min-w-0 flex-1 gap-1"
+                style={{
+                  gridTemplateColumns: `repeat(${grid.length}, minmax(0, 1fr))`,
+                }}
+              >
+                {grid.map((week, wi) => (
+                  <div key={wi} className="flex min-w-0 flex-col gap-1">
+                    {week.map((day, di) => {
+                      const bgColor =
+                        day.distance === 0
+                          ? 'var(--color-border)'
+                          : isAll
+                            ? getColorAll(day.typeRatio, day.domType)
+                            : getColor(day.distance, max, filter);
+                      const titleText =
+                        day.activities.length === 0
+                          ? day.date
+                          : isGym
+                            ? `${day.date}: ${day.distance} session(s)`
+                            : day.domType === 'Training'
+                              ? `${day.date}: ${Math.round(day.timeSecs / 60)}min`
+                              : `${day.date}: ${(day.activities.reduce((s, a) => s + a.distance, 0) / 1000).toFixed(1)} km`;
+                      return (
+                        <div
+                          key={di}
+                          className="aspect-square w-full cursor-pointer rounded-sm transition-colors hover:ring-1 hover:ring-[var(--color-muted)]"
+                          style={{ backgroundColor: bgColor }}
+                          title={titleText}
+                          onClick={() => {
+                            if (day.activities.length > 0)
+                              onSelectActivity?.(day.activities[0]);
+                          }}
+                        />
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         ))}
