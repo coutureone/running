@@ -45,10 +45,7 @@ function Dashboard() {
   }, [filtered, selectedProvince]);
 
   return (
-    <div
-      className="dashboard min-h-screen bg-[var(--color-bg)]"
-      data-filter={filter}
-    >
+    <div className="min-h-screen bg-[var(--color-bg)]" data-filter={filter}>
       <Header
         dark={dark}
         toggleTheme={toggle}
@@ -65,58 +62,61 @@ function Dashboard() {
           onBack={() => setPage('home')}
         />
       ) : (
-        <main className="dashboard-main mx-auto max-w-[1400px] px-4 py-6 min-[1800px]:max-w-[1920px] min-[1800px]:px-8 min-[1800px]:py-8 sm:px-6">
-          <StatsCards
-            activities={filtered}
-            allActivities={activities}
-            year={year}
-            filter={filter}
-            onSelectActivity={setSelectedActivity}
-          />
-          <ContributionHeatmap
-            activities={filtered}
-            year={heatmapYear}
-            filter={filter}
-            onSelectActivity={setSelectedActivity}
-          />
+        <main className="mx-auto max-w-[1400px] px-4 py-5 sm:px-6 sm:py-6">
+          <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[1fr_360px] xl:grid-cols-[1fr_380px]">
+            {/* Left column */}
+            <div className="min-w-0 space-y-6 overflow-hidden">
+              <StatsCards
+                activities={filtered}
+                allActivities={activities}
+                year={year}
+                filter={filter}
+                onSelectActivity={setSelectedActivity}
+              />
+              <ContributionHeatmap
+                activities={filtered}
+                year={heatmapYear}
+                filter={filter}
+                onSelectActivity={setSelectedActivity}
+              />
+              <ActivityLog
+                activities={filtered}
+                years={years}
+                year={year}
+                setYear={setYear}
+                selectedActivity={selectedActivity}
+                onSelectActivity={setSelectedActivity}
+                filter={filter}
+              />
+            </div>
 
-          <div className="dashboard-log min-w-0">
-            <ActivityLog
-              activities={filtered}
-              years={years}
-              year={year}
-              setYear={setYear}
-              selectedActivity={selectedActivity}
-              onSelectActivity={setSelectedActivity}
-              filter={filter}
-            />
-          </div>
-
-          <div className="dashboard-side flex min-w-0 flex-col gap-6 overflow-hidden">
-            <ProfileCard activities={activities} filter={filter} />
-            <ChinaMap
-              activities={filtered}
-              filter={filter}
-              selectedProvince={selectedProvince}
-              onSelectProvince={(p) => {
-                setSelectedProvince(p);
-                setSelectedActivity(null);
-              }}
-            />
-            <RouteMap
-              activities={provinceFiltered}
-              selectedActivity={selectedActivity}
-              dark={dark}
-              onClearSelection={() => setSelectedActivity(null)}
-            />
-            <PersonalBest
-              activities={activities}
-              onSelectActivity={setSelectedActivity}
-            />
-            <CalendarWidget
-              activities={filtered}
-              onSelectActivity={setSelectedActivity}
-            />
+            {/* Right column */}
+            <div className="flex min-w-0 flex-col gap-6 overflow-hidden">
+              <ProfileCard activities={activities} filter={filter} />
+              <ChinaMap
+                activities={filtered}
+                filter={filter}
+                selectedProvince={selectedProvince}
+                onSelectProvince={(p) => {
+                  setSelectedProvince(p);
+                  setSelectedActivity(null);
+                }}
+              />
+              <RouteMap
+                activities={provinceFiltered}
+                selectedActivity={selectedActivity}
+                dark={dark}
+                onClearSelection={() => setSelectedActivity(null)}
+              />
+              <PersonalBest
+                activities={activities}
+                onSelectActivity={setSelectedActivity}
+              />
+              <CalendarWidget
+                activities={filtered}
+                onSelectActivity={setSelectedActivity}
+              />
+            </div>
           </div>
         </main>
       )}
