@@ -122,7 +122,17 @@ function Dashboard() {
       )}
 
       <footer className="border-t border-[var(--color-border)] py-6 text-center text-sm text-[var(--color-muted)]">
-        &copy; {new Date().getFullYear()} Running Page 3.0
+        &copy; {new Date().getFullYear()} Couture&apos;s Running &middot; Built
+        with{' '}
+        <a
+          href="https://github.com/yihong0618/running_page"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline underline-offset-2 hover:text-[var(--color-text)]"
+        >
+          Running Page
+        </a>{' '}
+        by yihong0618
       </footer>
     </div>
   );
