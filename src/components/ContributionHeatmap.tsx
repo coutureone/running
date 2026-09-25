@@ -353,7 +353,7 @@ export function ContributionHeatmap({
   return (
     <div
       ref={captureRef}
-      className="overflow-x-auto rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-5 md:p-8"
+      className="dashboard-heatmap overflow-x-auto rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-5 min-[1800px]:p-8"
     >
       <style>{`
         @keyframes fadeSlideIn {
@@ -381,8 +381,10 @@ export function ContributionHeatmap({
       `}</style>
 
       {/* Header */}
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-semibold md:text-2xl">{heatmapTitle}</h2>
+      <div className="mb-4 flex flex-col items-start gap-3 min-[1400px]:flex-row min-[1400px]:items-center min-[1400px]:justify-between">
+        <h2 className="text-lg font-semibold min-[1800px]:text-2xl">
+          {heatmapTitle}
+        </h2>
         <div className="flex items-center gap-1.5">
           {/* ALL button */}
           <button
@@ -508,7 +510,7 @@ export function ContributionHeatmap({
         {yearData.map(({ year: yr, grid, max, monthPositions, stats }, idx) => (
           <div
             key={yr}
-            className="heatmap-year-row min-w-[820px]"
+            className="heatmap-year-row min-w-[650px] min-[1800px]:min-w-[820px]"
             style={{ animationDelay: `${idx * 60}ms` }}
           >
             {/* Year label when showing all */}
@@ -523,14 +525,14 @@ export function ContributionHeatmap({
                 </span>
               </div>
             )}
-            <div className="ml-6 flex">
+            <div className="ml-5 flex min-[1800px]:ml-6">
               {monthPositions.map((m, i) => {
                 const nextStart = monthPositions[i + 1]?.weekIdx ?? grid.length;
                 const span = nextStart - m.weekIdx;
                 return (
                   <div
                     key={i}
-                    className="min-w-0 text-xs text-[var(--color-muted)] md:text-sm"
+                    className="min-w-0 text-xs text-[var(--color-muted)] min-[1800px]:text-sm"
                     style={{
                       flexGrow: span,
                       flexBasis: 0,
@@ -556,8 +558,8 @@ export function ContributionHeatmap({
                 );
               })}
             </div>
-            <div className="mt-2 flex gap-1">
-              <div className="mr-1 flex w-4 shrink-0 flex-col gap-1">
+            <div className="mt-1 flex gap-[3px] min-[1800px]:mt-2 min-[1800px]:gap-1">
+              <div className="mr-1 flex w-3 shrink-0 flex-col gap-[3px] min-[1800px]:w-4 min-[1800px]:gap-1">
                 {dayLabels.map((d, i) => (
                   <div
                     key={i}
@@ -568,13 +570,16 @@ export function ContributionHeatmap({
                 ))}
               </div>
               <div
-                className="grid min-w-0 flex-1 gap-1"
+                className="grid min-w-0 flex-1 gap-[3px] min-[1800px]:gap-1"
                 style={{
                   gridTemplateColumns: `repeat(${grid.length}, minmax(0, 1fr))`,
                 }}
               >
                 {grid.map((week, wi) => (
-                  <div key={wi} className="flex min-w-0 flex-col gap-1">
+                  <div
+                    key={wi}
+                    className="flex min-w-0 flex-col gap-[3px] min-[1800px]:gap-1"
+                  >
                     {week.map((day, di) => {
                       const bgColor =
                         day.distance === 0
