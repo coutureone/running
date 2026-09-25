@@ -353,7 +353,7 @@ export function ContributionHeatmap({
   return (
     <div
       ref={captureRef}
-      className="dashboard-heatmap overflow-x-auto rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-5 min-[1800px]:p-8"
+      className="overflow-x-auto rounded-xl border border-[var(--color-border)] bg-[var(--color-card)] p-5"
     >
       <style>{`
         @keyframes fadeSlideIn {
@@ -381,10 +381,8 @@ export function ContributionHeatmap({
       `}</style>
 
       {/* Header */}
-      <div className="mb-4 flex flex-col items-start gap-3 min-[1400px]:flex-row min-[1400px]:items-center min-[1400px]:justify-between">
-        <h2 className="text-lg font-semibold min-[1800px]:text-2xl">
-          {heatmapTitle}
-        </h2>
+      <div className="mb-4 flex min-h-8 flex-wrap items-center justify-between gap-3">
+        <h2 className="text-lg font-semibold">{heatmapTitle}</h2>
         <div className="flex items-center gap-1.5">
           {/* ALL button */}
           <button
@@ -510,7 +508,7 @@ export function ContributionHeatmap({
         {yearData.map(({ year: yr, grid, max, monthPositions, stats }, idx) => (
           <div
             key={yr}
-            className="heatmap-year-row min-w-[650px] min-[1800px]:min-w-[820px]"
+            className="heatmap-year-row min-w-[810px]"
             style={{ animationDelay: `${idx * 60}ms` }}
           >
             {/* Year label when showing all */}
@@ -525,17 +523,17 @@ export function ContributionHeatmap({
                 </span>
               </div>
             )}
-            <div className="ml-5 flex min-[1800px]:ml-6">
+            <div className="ml-5 flex">
               {monthPositions.map((m, i) => {
                 const nextStart = monthPositions[i + 1]?.weekIdx ?? grid.length;
                 const span = nextStart - m.weekIdx;
                 return (
                   <div
                     key={i}
-                    className="min-w-0 text-xs text-[var(--color-muted)] min-[1800px]:text-sm"
+                    className="text-xs text-[var(--color-muted)]"
                     style={{
-                      flexGrow: span,
-                      flexBasis: 0,
+                      width: `${span * 14}px`,
+                      minWidth: `${span * 14}px`,
                     }}
                   >
                     {locale === 'zh'
@@ -558,59 +556,49 @@ export function ContributionHeatmap({
                 );
               })}
             </div>
-            <div className="mt-1 flex gap-[3px] min-[1800px]:mt-2 min-[1800px]:gap-1">
-              <div className="mr-1 flex w-3 shrink-0 flex-col gap-[3px] min-[1800px]:w-4 min-[1800px]:gap-1">
+            <div className="mt-1 flex gap-[3px]">
+              <div className="mr-1 flex flex-col gap-[3px]">
                 {dayLabels.map((d, i) => (
                   <div
                     key={i}
-                    className="flex flex-1 items-center justify-center text-[10px] text-[var(--color-muted)]"
+                    className="flex h-3 w-3 items-center justify-center text-[10px] text-[var(--color-muted)]"
                   >
                     {d}
                   </div>
                 ))}
               </div>
-              <div
-                className="grid min-w-0 flex-1 gap-[3px] min-[1800px]:gap-1"
-                style={{
-                  gridTemplateColumns: `repeat(${grid.length}, minmax(0, 1fr))`,
-                }}
-              >
-                {grid.map((week, wi) => (
-                  <div
-                    key={wi}
-                    className="flex min-w-0 flex-col gap-[3px] min-[1800px]:gap-1"
-                  >
-                    {week.map((day, di) => {
-                      const bgColor =
-                        day.distance === 0
-                          ? 'var(--color-border)'
-                          : isAll
-                            ? getColorAll(day.typeRatio, day.domType)
-                            : getColor(day.distance, max, filter);
-                      const titleText =
-                        day.activities.length === 0
-                          ? day.date
-                          : isGym
-                            ? `${day.date}: ${day.distance} session(s)`
-                            : day.domType === 'Training'
-                              ? `${day.date}: ${Math.round(day.timeSecs / 60)}min`
-                              : `${day.date}: ${(day.activities.reduce((s, a) => s + a.distance, 0) / 1000).toFixed(1)} km`;
-                      return (
-                        <div
-                          key={di}
-                          className="aspect-square w-full cursor-pointer rounded-sm transition-colors hover:ring-1 hover:ring-[var(--color-muted)]"
-                          style={{ backgroundColor: bgColor }}
-                          title={titleText}
-                          onClick={() => {
-                            if (day.activities.length > 0)
-                              onSelectActivity?.(day.activities[0]);
-                          }}
-                        />
-                      );
-                    })}
-                  </div>
-                ))}
-              </div>
+              {grid.map((week, wi) => (
+                <div key={wi} className="flex flex-col gap-[3px]">
+                  {week.map((day, di) => {
+                    const bgColor =
+                      day.distance === 0
+                        ? 'var(--color-border)'
+                        : isAll
+                          ? getColorAll(day.typeRatio, day.domType)
+                          : getColor(day.distance, max, filter);
+                    const titleText =
+                      day.activities.length === 0
+                        ? day.date
+                        : isGym
+                          ? `${day.date}: ${day.distance} session(s)`
+                          : day.domType === 'Training'
+                            ? `${day.date}: ${Math.round(day.timeSecs / 60)}min`
+                            : `${day.date}: ${(day.activities.reduce((s, a) => s + a.distance, 0) / 1000).toFixed(1)} km`;
+                    return (
+                      <div
+                        key={di}
+                        className="h-3 w-3 cursor-pointer rounded-sm transition-colors hover:ring-1 hover:ring-[var(--color-muted)]"
+                        style={{ backgroundColor: bgColor }}
+                        title={titleText}
+                        onClick={() => {
+                          if (day.activities.length > 0)
+                            onSelectActivity?.(day.activities[0]);
+                        }}
+                      />
+                    );
+                  })}
+                </div>
+              ))}
             </div>
           </div>
         ))}
