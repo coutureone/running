@@ -314,17 +314,17 @@ jobs:
 
   notify:
     if: always()
-    name: Notify result via Bark
+    name: Notify result via Tink
     runs-on: ubuntu-latest
     needs:
       - sync
       - publish_github_pages
     steps:
-      - name: Send Bark notification
+      - name: Send Tink and Bark notification
         env:
           BARK_URL: ${{ secrets.BARK_URL }}
           TINK_API_KEY: ${{ secrets.TINK_API_KEY }}
-          TINK_DEVICE_ID: ${{ secrets.TINK_DEVICE_ID }}
+          TINK_DEVICE_IDS_JSON: ${{ secrets.TINK_DEVICE_IDS_JSON }}
           SYNC_RESULT: ${{ needs.sync.result }}
           PUBLISH_RESULT: ${{ needs.publish_github_pages.result }}
           GARMIN_RESULT: ${{ needs.sync.outputs.GARMIN_CN_GLOBAL_RESULT }}
@@ -350,38 +350,24 @@ jobs:
           同步类型: $RUN_TYPE
           点击查看 GitHub Actions 详情"
 
-          if [ -n "$BARK_URL" ]; then
+          if [ -n "$TINK_API_KEY" ] && [ -n "$TINK_DEVICE_IDS_JSON" ] && [ -n "$BARK_URL" ]; then
+            bark_device_key=${BARK_URL##*/}
             jq -n \
+              --argjson devices "$TINK_DEVICE_IDS_JSON" \
+              --arg bark_device "$bark_device_key" \
               --arg title "$title" \
               --arg body "$body" \
               --arg sound "$sound" \
               --arg url "$RUN_URL" \
-              '{title: $title, body: $body, group: "Running", sound: $sound, url: $url}' \
-              | curl --fail-with-body --silent --show-error --max-time 10 \
-                  -H 'Content-Type: application/json; charset=utf-8' \
-                  --data-binary @- "$BARK_URL" \
-              | jq -e '.code == 200' >/dev/null \
-              || echo '::warning::Bark notification failed (non-critical)'
-          else
-            echo '::warning::BARK_URL is not configured; skipping Bark notification'
-          fi
-
-          if [ -n "$TINK_API_KEY" ] && [ -n "$TINK_DEVICE_ID" ]; then
-            jq -n \
-              --arg device "$TINK_DEVICE_ID" \
-              --arg title "$title" \
-              --arg body "$body" \
-              --arg sound "$sound" \
-              --arg url "$RUN_URL" \
-              '{devices: [$device], title: $title, body: $body, group: "Running", sound: $sound, url: $url}' \
+              '{devices: $devices, bark_devices: [$bark_device], title: $title, body: $body, group: "Running", sound: $sound, url: $url}' \
               | curl --fail-with-body --silent --show-error --max-time 10 \
                   -H "Authorization: Bearer $TINK_API_KEY" \
                   -H 'Content-Type: application/json; charset=utf-8' \
                   --data-binary @- https://tink.mrma.me/api/v1/messages \
-              | jq -e '.code == 0' >/dev/null \
-              || echo '::warning::Tink notification failed (non-critical)'
+              | jq -e '.code == 0 and .data.dispatched_bark == 1 and .data.id != null' >/dev/null \
+              || echo '::warning::Tink or Bark notification failed (non-critical)'
           else
-            echo '::warning::Tink desktop secret is not configured; skipping desktop notification'
+            echo '::warning::Tink notification secrets are not configured; skipping notification'
           fi
 
           if [ "$GARMIN_RESULT" = 'failure' ] && [ "$SYNC_RESULT" = 'success' ]; then
