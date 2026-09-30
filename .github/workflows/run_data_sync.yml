@@ -331,11 +331,6 @@ jobs:
           EVENT_NAME: ${{ github.event_name }}
           RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          if [ -z "$BARK_URL" ]; then
-            echo '::warning::BARK_URL is not configured; skipping Bark notification'
-            exit 0
-          fi
-
           status='success'
           title='Running 同步成功'
           sound='birdsong'
@@ -355,17 +350,21 @@ jobs:
           同步类型: $RUN_TYPE
           点击查看 GitHub Actions 详情"
 
-          jq -n \
-            --arg title "$title" \
-            --arg body "$body" \
-            --arg sound "$sound" \
-            --arg url "$RUN_URL" \
-            '{title: $title, body: $body, group: "Running", sound: $sound, url: $url}' \
-            | curl --fail-with-body --silent --show-error --max-time 10 \
-                -H 'Content-Type: application/json; charset=utf-8' \
-                --data-binary @- "$BARK_URL" \
-            | jq -e '.code == 200' >/dev/null \
-            || echo '::warning::Bark notification failed (non-critical)'
+          if [ -n "$BARK_URL" ]; then
+            jq -n \
+              --arg title "$title" \
+              --arg body "$body" \
+              --arg sound "$sound" \
+              --arg url "$RUN_URL" \
+              '{title: $title, body: $body, group: "Running", sound: $sound, url: $url}' \
+              | curl --fail-with-body --silent --show-error --max-time 10 \
+                  -H 'Content-Type: application/json; charset=utf-8' \
+                  --data-binary @- "$BARK_URL" \
+              | jq -e '.code == 200' >/dev/null \
+              || echo '::warning::Bark notification failed (non-critical)'
+          else
+            echo '::warning::BARK_URL is not configured; skipping Bark notification'
+          fi
 
           if [ -n "$TINK_API_KEY" ] && [ -n "$TINK_DEVICE_ID" ]; then
             jq -n \
