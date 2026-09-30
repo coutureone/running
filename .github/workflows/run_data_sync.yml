@@ -323,6 +323,8 @@ jobs:
       - name: Send Bark notification
         env:
           BARK_URL: ${{ secrets.BARK_URL }}
+          TINK_API_KEY: ${{ secrets.TINK_API_KEY }}
+          TINK_DEVICE_ID: ${{ secrets.TINK_DEVICE_ID }}
           SYNC_RESULT: ${{ needs.sync.result }}
           PUBLISH_RESULT: ${{ needs.publish_github_pages.result }}
           GARMIN_RESULT: ${{ needs.sync.outputs.GARMIN_CN_GLOBAL_RESULT }}
@@ -364,6 +366,24 @@ jobs:
                 --data-binary @- "$BARK_URL" \
             | jq -e '.code == 200' >/dev/null \
             || echo '::warning::Bark notification failed (non-critical)'
+
+          if [ -n "$TINK_API_KEY" ] && [ -n "$TINK_DEVICE_ID" ]; then
+            jq -n \
+              --arg device "$TINK_DEVICE_ID" \
+              --arg title "$title" \
+              --arg body "$body" \
+              --arg sound "$sound" \
+              --arg url "$RUN_URL" \
+              '{devices: [$device], title: $title, body: $body, group: "Running", sound: $sound, url: $url}' \
+              | curl --fail-with-body --silent --show-error --max-time 10 \
+                  -H "Authorization: Bearer $TINK_API_KEY" \
+                  -H 'Content-Type: application/json; charset=utf-8' \
+                  --data-binary @- https://tink.mrma.me/api/v1/messages \
+              | jq -e '.code == 0' >/dev/null \
+              || echo '::warning::Tink notification failed (non-critical)'
+          else
+            echo '::warning::Tink desktop secret is not configured; skipping desktop notification'
+          fi
 
           if [ "$GARMIN_RESULT" = 'failure' ] && [ "$SYNC_RESULT" = 'success' ]; then
             echo '::error::Garmin CN to Global synchronization failed'
