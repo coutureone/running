@@ -322,15 +322,15 @@ jobs:
     steps:
       - name: Send Bark notification
         env:
-          BARK_KEY: ${{ secrets.BARK_KEY }}
+          BARK_URL: ${{ secrets.BARK_URL }}
           SYNC_RESULT: ${{ needs.sync.result }}
           PUBLISH_RESULT: ${{ needs.publish_github_pages.result }}
           GARMIN_RESULT: ${{ needs.sync.outputs.GARMIN_CN_GLOBAL_RESULT }}
           EVENT_NAME: ${{ github.event_name }}
           RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
-          if [ -z "$BARK_KEY" ]; then
-            echo '::warning::BARK_KEY is not configured; skipping Bark notification'
+          if [ -z "$BARK_URL" ]; then
+            echo '::warning::BARK_URL is not configured; skipping Bark notification'
             exit 0
           fi
 
@@ -354,15 +354,15 @@ jobs:
           点击查看 GitHub Actions 详情"
 
           jq -n \
-            --arg key "$BARK_KEY" \
             --arg title "$title" \
             --arg body "$body" \
             --arg sound "$sound" \
             --arg url "$RUN_URL" \
-            '{device_key: $key, title: $title, body: $body, group: "Running", sound: $sound, url: $url}' \
+            '{title: $title, body: $body, group: "Running", sound: $sound, url: $url}' \
             | curl --fail-with-body --silent --show-error --max-time 10 \
                 -H 'Content-Type: application/json; charset=utf-8' \
-                --data-binary @- https://api.day.app/push \
+                --data-binary @- "$BARK_URL" \
+            | jq -e '.code == 200' >/dev/null \
             || echo '::warning::Bark notification failed (non-critical)'
 
           if [ "$GARMIN_RESULT" = 'failure' ] && [ "$SYNC_RESULT" = 'success' ]; then
